@@ -6,18 +6,29 @@
 using namespace std;
 
 
+/**
+    Get an element from the maze array.
+    (This handles the math to treat a 1D array as a 2D array.)
+*/
 bool maze_get(bool maze[], int max_size, int row, int col)
 {
     return maze[col + row * max_size];
 }
 
 
+/**
+    Set an element from the maze array.
+    (This handles the math to treat a 1D array as a 2D array.)
+*/
 void maze_set(bool maze[], int max_size, int row, int col, bool value)
 {
     maze[col + row * max_size] = value;
 }
 
 
+/**
+    Find a random, un-opened neighbor of a maze cell.
+*/
 int* find_neighbor(bool maze[], int nrows, int ncols, int row, int col, int max_size, int result[])
 {
     int order[4] = {0, 1, 2, 3};
@@ -57,6 +68,9 @@ int* find_neighbor(bool maze[], int nrows, int ncols, int row, int col, int max_
 }
 
 
+/**
+    Generate a maze using the backtracking algorithm.
+*/
 void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
 {
     int row = 1;
@@ -103,6 +117,9 @@ void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
 }
 
 
+/**
+    Generate random maze start/finish positions.
+*/
 void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
 {
     int wall = 0;
@@ -139,6 +156,9 @@ void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
 }
 
 
+/**
+    Print a maze, including start/finish positions.
+*/
 void maze_print(bool maze[], int max_size, int nrows, int ncols, int start[], int finish[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.

@@ -4,7 +4,7 @@
 
 int main()
 {
-    const int MAX_SIZE = 101;
+    const int MAX_SIZE = 71;
     bool maze[MAX_SIZE * MAX_SIZE];
     int nrows = 19;
     int ncols = 31;
