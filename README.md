@@ -2,4 +2,16 @@
 
 ### Motivation
 
-I wanted to learn C++, so I decided to build a classic text adventure game. This will be a text-only game involving mazes, probably in the arcade style. It will be built on `ncurses` and will only support Linux, Unix, or MacOS (this is a learning project, I see no reason to fiddle with Windows).
+Let's learn C++.
+
+We will build an old-school text-only adventure game. Let's try a maze-solving arcade game. It will be built using `ncurses` and I won't bother trying to support Windows.
+
+Each branch of this repository has an increasingly fun game.  And for each branch we will have to learn more about C++ to create the game we want.
+
+### The Game - This Branch
+
+This branch has the simplest form of the game.
+
+1. Run the progam and a maze is printed to the screen.
+2. Press `enter` and a new (slightly larger) maze is printed to the screen.
+3. Type `q` to quit.
