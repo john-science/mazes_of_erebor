@@ -10,8 +10,9 @@ Each branch of this repository has an increasingly fun game.  And for each branc
 
 ### The Game - This Branch
 
-This branch has the simplest form of the game.
+Navigate a nearly infinite number of unique mazes.
 
-1. Run the progam and a maze is printed to the screen.
-2. Press `enter` and a new (slightly larger) maze is printed to the screen.
-3. Type `q` to quit.
+1. Run the progam and a maze is printed to an `ncurses` window.
+2. Use arrow keys to naviage your maze.
+3. When you read the end of a maze you will find yourself in a newer, larger maze.
+4. Type `q` to quit.
