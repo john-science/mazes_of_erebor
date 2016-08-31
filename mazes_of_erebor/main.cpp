@@ -16,6 +16,8 @@ int main()
     char c;
 
     initscr();
+    noecho();
+    curs_set(false);
 
     while (true) {
         // generate a new maze
