@@ -2,6 +2,8 @@
 #include <string>
 #include "maze.h"
 
+using namespace std;
+
 
 int main()
 {
@@ -14,16 +16,16 @@ int main()
     string input;
 
     while (true) {
+        // generate a new maze
+        backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
+        gen_entrances_opposites(start, finish, nrows, ncols);
+        maze_print(maze, MAX_SIZE, nrows, ncols, start, finish);
+
         // parse user input
         getline(cin, input);
         if (input == "q") {
             break;
         }
-
-        // generate a new maze
-        backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
-        gen_entrances_opposites(start, finish, nrows, ncols);
-        maze_print(maze, MAX_SIZE, nrows, ncols, start, finish);
 
         // increase the size of the maze (to a limit)
         if (ncols < MAX_SIZE) {

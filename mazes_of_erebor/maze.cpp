@@ -132,12 +132,12 @@ void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
         finish[0] = (rand() % ((nrows - 1) / 2)) * 2 + 1;
         if (wall % 2 == 0) {
             // Start on West wall
-            start[1] = 1;
-            finish[1] = ncols - 2;
+            start[1] = 0;
+            finish[1] = ncols - 1;
         } else {
             // Start on East Wall
-            start[1] = ncols - 2;
-            finish[1] = 1;
+            start[1] = ncols - 1;
+            finish[1] = 0;
         }
     } else {
         // North-South walls
@@ -145,12 +145,12 @@ void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
         finish[1] = (rand() % ((ncols - 1) / 2)) * 2 + 1;
         if (wall % 2 == 0) {
             // Start on North wall
-            start[0] = 1;
-            finish[0] = nrows - 2;
+            start[0] = 0;
+            finish[0] = nrows - 1;
         } else {
             // Start on South Wall
-            start[0] = nrows - 2;
-            finish[0] = 1;
+            start[0] = nrows - 1;
+            finish[0] = 0;
         }
     }
 }
@@ -180,8 +180,8 @@ void maze_print(bool maze[], int max_size, int nrows, int ncols, int start[], in
     }
 
     // add start and end
-    grid[start[1] + start[0] * (ncols + 1)] = 'S';
-    grid[finish[1] + finish[0] * (ncols + 1)] = 'E';
+    grid[start[1] + start[0] * (ncols + 1)] = ' ';
+    grid[finish[1] + finish[0] * (ncols + 1)] = ' ';
 
     // do the actual printing
     cout << endl << string(grid) << endl;
