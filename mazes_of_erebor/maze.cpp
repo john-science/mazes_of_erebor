@@ -183,10 +183,10 @@ void maze_print(bool maze[], int max_size, int nrows, int ncols, int start[], in
     // add start and end
     grid[start[1] + start[0] * (ncols + 1)] = ' ';
     grid[finish[1] + finish[0] * (ncols + 1)] = ' ';
+    grid[nrows + (ncols + 1) - 1] = '\0';
 
     // do the actual printing
-    //cout << endl << string(grid) << endl;
     clear();
-    printw(grid);
+    mvprintw(0, 0, grid);
     refresh();
 }
