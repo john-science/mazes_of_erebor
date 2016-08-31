@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-lncurses" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -33,6 +34,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="maze.cpp" />
+		<Unit filename="maze.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ncurses.h>
 #include <string>
 #include "maze.h"
 
@@ -13,7 +14,9 @@ int main()
     int ncols = 31;
     int start[2] = {1, 1};
     int finish[2] = {1, 1};
-    string input;
+    char c;
+
+    initscr();
 
     while (true) {
         // generate a new maze
@@ -22,8 +25,8 @@ int main()
         maze_print(maze, MAX_SIZE, nrows, ncols, start, finish);
 
         // parse user input
-        getline(cin, input);
-        if (input == "q") {
+        c = getch();
+        if (c == 'q'){
             break;
         }
 
@@ -35,6 +38,7 @@ int main()
             nrows += 2;
         }
     }
+    endwin();
 
     return 0;
 }

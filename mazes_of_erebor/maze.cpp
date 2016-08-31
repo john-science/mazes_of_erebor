@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ncurses.h>
 #include <stack>
 #include <algorithm>
 #include <random>
@@ -184,5 +185,8 @@ void maze_print(bool maze[], int max_size, int nrows, int ncols, int start[], in
     grid[finish[1] + finish[0] * (ncols + 1)] = ' ';
 
     // do the actual printing
-    cout << endl << string(grid) << endl;
+    //cout << endl << string(grid) << endl;
+    clear();
+    printw(grid);
+    refresh();
 }
