@@ -1,6 +1,5 @@
 #include <iostream>
 #include <ncurses.h>
-#include <string>
 #include "maze.h"
 
 using namespace std;
