@@ -4,7 +4,7 @@
 
 Let's learn C++.
 
-We will build an old-school text-only adventure game. Let's try a maze-solving arcade game. It will be built using `ncurses` and I won't bother trying to support Windows.
+We will build an old-school text-only adventure game. A maze-solving arcade game. It will be built using `ncurses` and I won't bother trying to support Windows.
 
 Each branch of this repository has an increasingly fun game.  And for each branch we will have to learn more about C++ to create the game we want.
 
