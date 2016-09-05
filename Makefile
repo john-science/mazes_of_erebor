@@ -6,7 +6,7 @@ FLAGS = -std=c++11 -lncurses
 RELEASE_FLAGS = -O2
 DEBUG_FLAGS = -O0 -g
 CODE_DIR = mazes_of_erebor/
-FILES = $(CODE_DIR)main.cpp $(CODE_DIR)maze.cpp
+FILES = $(CODE_DIR)main.cpp $(CODE_DIR)maze.cpp $(CODE_DIR)menu.cpp $(CODE_DIR)game.cpp
 OUT_EXE = erebor
 
 

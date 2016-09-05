@@ -1,45 +1,37 @@
+#include <stdio.h>
 #include <iostream>
 #include <ncurses.h>
-#include "maze.h"
+#include "menu.h"
+#include "game.h"
 
-using namespace std;
+// forward declarations
+game_state game_window(WINDOW *menu_win);
 
 
+/**
+ *  Master game FSM
+ */
 int main()
 {
-    const int MAX_SIZE = 71;
-    bool maze[MAX_SIZE * MAX_SIZE];
-    int nrows = 19;
-    int ncols = 31;
-    int start[2] = {1, 1};
-    int finish[2] = {1, 1};
-    char c;
+    WINDOW *menu_win;
+    game_state state = menu_main;
 
     initscr();
+    clear();
     noecho();
+    cbreak();  // Line buffering disabled (use raw() to implement your own cntl-z)
     curs_set(false);
 
-    while (true) {
-        // generate a new maze
-        backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
-        gen_entrances_opposites(start, finish, nrows, ncols);
-        maze_print(maze, MAX_SIZE, nrows, ncols, start, finish);
-
-        // parse user input
-        c = getch();
-        if (c == 'q'){
-            break;
-        }
-
-        // increase the size of the maze (to a limit)
-        if (ncols < MAX_SIZE) {
-            ncols += 2;
-        }
-        if (nrows < (MAX_SIZE / 2)) {
-            nrows += 2;
+    while (state != quit) {
+        if (state == menu_main) {
+            state = main_menu(menu_win);
+        } else if (state == menu_diff) {
+            state = diff_menu(menu_win);
+        } else {
+            state = easy_ui(menu_win);
         }
     }
-    endwin();
 
+    endwin();
     return 0;
 }

@@ -157,36 +157,35 @@ void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
 }
 
 
+
 /**
     Print a maze, including start/finish positions.
 */
-void maze_print(bool maze[], int max_size, int nrows, int ncols, int start[], int finish[])
+void maze_print(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int start[], int finish[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
-    char grid[nrows * (ncols + 1) - 1];
-    fill_n(grid, nrows * (ncols + 1) - 1, '#');
+    char grid[ncols];
 
-    // fill in end-of-lines
-    for (int i=0; i < nrows; i++) {
-        grid[i * (ncols + 1) - 1] = '\n';
-    }
+    menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
+    box(menu_win, 0, 0);
 
     // open up hallways
     for (int r=0; r < nrows; r++) {
+        fill_n(grid, ncols, '#');
         for (int c=0; c < ncols; c++) {
             if (!maze[c + r * max_size]){
-                grid[c + r * (ncols + 1)] = ' ';
+                grid[c] = ' ';
             }
         }
+        grid[ncols] = '\0';
+        mvwprintw(menu_win, r + 1, 1, "%s", grid);
     }
+    wrefresh(menu_win);
 
+    /**
+     * TODO: Add start and finish...
     // add start and end
     grid[start[1] + start[0] * (ncols + 1)] = ' ';
     grid[finish[1] + finish[0] * (ncols + 1)] = ' ';
-    grid[nrows + (ncols + 1) - 1] = '\0';
-
-    // do the actual printing
-    clear();
-    mvprintw(0, 0, grid);
-    refresh();
+    */
 }
