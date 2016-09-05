@@ -4,7 +4,8 @@
 #include "menu.h"
 
 // forward declarations
-//game_state easy_ui(WINDOW *menu_win);
+void success_splash();
+game_state easy_ui(WINDOW *menu_win);
 //game_state medium_ui(WINDOW *menu_win);
 //game_state hard_ui(WINDOW *menu_win);
 
@@ -56,6 +57,8 @@ game_state easy_ui(WINDOW *menu_win)
 
         // If you reach the end, start over in a new maze
         if (player[0] == finish[0] && player[1] == finish[1]) {
+            success_splash();
+
             // increase the size of the maze (to a limit)
             if (ncols < MAX_SIZE) {
                 ncols += 2;
@@ -74,3 +77,16 @@ game_state easy_ui(WINDOW *menu_win)
     clear();
 }
 
+
+/**
+ *  A quick splash screen to congratulate the player on finishing the maze.
+ *  NOTE: This is partially just a place-holder for a better splash screen.
+ */
+void success_splash() {
+    clear();
+    mvprintw(1, 1, "Success! You found your way through the maze.");
+    mvprintw(3, 1, "You delver deeper into Erebor...");
+    refresh();
+
+    getch();
+}
