@@ -1,30 +1,29 @@
-#include <stdio.h>
-#include <iostream>
+
 #include <ncurses.h>
 #include "menu.h"
 #include "game.h"
 
-// forward declarations
-game_state game_window(WINDOW *menu_win);
-
 
 /**
- *  Master game FSM
+ *  Master game FSM and GUI setup
  */
 int main()
 {
     WINDOW *menu_win;
     game_state state = menu_main;
 
+    // init NCURSES GUI
     initscr();
     clear();
-    noecho();
-    cbreak();  // Line buffering disabled (use raw() to implement your own cntl-z)
-    curs_set(false);
+    noecho();              // disable echo text
+    cbreak();              // disable line buffering
+    curs_set(false);       // disable cursor
+    keypad(stdscr, true);  // enable key pad
 
+    // master game FSM
     while (state != quit) {
         if (state == menu_main) {
-            state = main_menu(menu_win);
+            state = main_menu(menu_win);  // TODO: Warning: menu_win un-init
         } else if (state == menu_diff) {
             state = diff_menu(menu_win);
         } else {

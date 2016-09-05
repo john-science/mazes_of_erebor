@@ -24,6 +24,9 @@ game_state main_menu(WINDOW *menu_win);
 game_state diff_menu(WINDOW *menu_win);
 
 
+/**
+ *  Menu for: Game Difficulty selection
+ */
 game_state diff_menu(WINDOW *menu_win)
 {
     char const *choices[] = {"Easy", "Medium", "Hard",};
@@ -81,6 +84,9 @@ game_state diff_menu(WINDOW *menu_win)
 }
 
 
+/**
+ *  Menu: Default main menu
+ */
 game_state main_menu(WINDOW *menu_win)
 {
     char const *choices[] = {"Start New", "Quit",};
@@ -135,6 +141,9 @@ game_state main_menu(WINDOW *menu_win)
 }
 
 
+/**
+ *  Print a simple menu window
+ */
 void print_menu(WINDOW *menu_win, int highlight, char const **choices, int n_choices)
 {
     int x, y, i;

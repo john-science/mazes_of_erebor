@@ -3,6 +3,11 @@
 #include "maze.h"
 #include "menu.h"
 
+// forward declarations
+//game_state easy_ui(WINDOW *menu_win);
+//game_state medium_ui(WINDOW *menu_win);
+//game_state hard_ui(WINDOW *menu_win);
+
 
 game_state easy_ui(WINDOW *menu_win)
 {
@@ -16,25 +21,32 @@ game_state easy_ui(WINDOW *menu_win)
 
     // generate a new maze
     backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
-    gen_entrances_opposites(player, finish, nrows, ncols);
-    maze_print(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+    gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
+    maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
 
     while (true) {
         // input and update
-        //c = wgetch(menu_win);
         c = getch();
         switch (c) {
-            case 10:  // enter
-                // increase the size of the maze (to a limit)
-                if (ncols < MAX_SIZE) {
-                    ncols += 2;
+            case KEY_UP:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0] - 1, player[1])) {
+                    player[0] -= 1;
                 }
-                if (nrows < (MAX_SIZE / 2)) {
-                    nrows += 2;
+                break;
+            case KEY_DOWN:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0] + 1, player[1])) {
+                    player[0] += 1;
                 }
-                // generate a new maze
-                backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
-                gen_entrances_opposites(player, finish, nrows, ncols);
+                break;
+            case KEY_LEFT:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0], player[1] - 1)) {
+                    player[1] -= 1;
+                }
+                break;
+            case KEY_RIGHT:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0], player[1] + 1)) {
+                    player[1] += 1;
+                }
                 break;
             case 113:  // q
                 return menu_main;
@@ -42,7 +54,21 @@ game_state easy_ui(WINDOW *menu_win)
                 break;
         }
 
-        maze_print(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        // If you reach the end, start over in a new maze
+        if (player[0] == finish[0] && player[1] == finish[1]) {
+            // increase the size of the maze (to a limit)
+            if (ncols < MAX_SIZE) {
+                ncols += 2;
+            }
+            if (nrows < (MAX_SIZE / 2)) {
+                nrows += 2;
+            }
+            // generate a new maze
+            backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
+            gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
+        }
+
+        maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
     }
 
     clear();

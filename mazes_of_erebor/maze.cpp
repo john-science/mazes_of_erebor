@@ -121,7 +121,7 @@ void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
 /**
     Generate random maze start/finish positions.
 */
-void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
+void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[], int nrows, int ncols)
 {
     int wall = 0;
 
@@ -154,14 +154,17 @@ void gen_entrances_opposites(int start[], int finish[], int nrows, int ncols)
             finish[0] = 0;
         }
     }
+
+    maze[start[0] * max_size + start[1]] = false;
+    maze[finish[0] * max_size + finish[1]] = false;
 }
 
 
 
 /**
-    Print a maze, including start/finish positions.
+    Print a maze, including player/finish positions.
 */
-void maze_print(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int start[], int finish[])
+void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     char grid[ncols];
@@ -173,7 +176,10 @@ void maze_print(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncol
     for (int r=0; r < nrows; r++) {
         fill_n(grid, ncols, '#');
         for (int c=0; c < ncols; c++) {
-            if (!maze[c + r * max_size]){
+            if (player[0] == r && player[1] == c) {
+                grid[c] = '@';
+            }
+            else if (!maze[c + r * max_size]){
                 grid[c] = ' ';
             }
         }
@@ -181,11 +187,20 @@ void maze_print(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncol
         mvwprintw(menu_win, r + 1, 1, "%s", grid);
     }
     wrefresh(menu_win);
+}
 
-    /**
-     * TODO: Add start and finish...
-    // add start and end
-    grid[start[1] + start[0] * (ncols + 1)] = ' ';
-    grid[finish[1] + finish[0] * (ncols + 1)] = ' ';
-    */
+
+/**
+    Determine if a particular grid cell is a valid move.
+ */
+bool maze_valid_move(bool maze[], int max_size, int nrows, int ncols, int r, int c) {
+    if (r < 0 || c < 0) {
+        return false;
+    } else if (r >= nrows) {
+        return false;
+    } else if (c >= ncols) {
+        return false;
+    } else {
+        return !maze[r * max_size + c];
+    }
 }
