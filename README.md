@@ -12,7 +12,8 @@ Each branch of this repository has an increasingly fun game.  And for each branc
 
 Navigate a nearly infinite number of unique mazes.
 
-1. Run the progam and a maze is printed to an `ncurses` window.
-2. Use arrow keys to naviage your maze.
-3. When you read the end of a maze you will find yourself in a newer, larger maze.
-4. Type `q` to quit.
+1. Run the program and a maze is printed to an `ncurses` window.
+2. Select your maze difficulty.
+3. Use arrow keys to naviage your maze.
+4. When you read the end of a maze you will find yourself in a newer, larger maze.
+5. Type `q` to quit.
