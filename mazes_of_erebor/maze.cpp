@@ -74,10 +74,7 @@ int* find_neighbor(bool maze[], int nrows, int ncols, int row, int col, int max_
 */
 void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
 {
-    int row = 1;
-    int col = 1;
-    int r = 1;
-    int c = 1;
+    int row, col, r, c;
     int neighbor[2] = {-999, -999};
     stack <int> track;
 
@@ -123,8 +120,7 @@ void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
 */
 void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[], int nrows, int ncols)
 {
-    int wall = 0;
-
+    int wall;
     wall = rand() % 4;
 
     if (wall / 2 == 0) {
@@ -162,8 +158,10 @@ void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[
 
 
 /**
-    Print a maze, including player/finish positions.
-*/
+ *   Print a maze, including player/finish positions.
+ *   This prints from a God's Eye perspective,
+ *   where the entire maze is visible.
+ */
 void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
@@ -179,12 +177,107 @@ void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
             if (player[0] == r && player[1] == c) {
                 grid[c] = '@';
             }
-            else if (!maze[c + r * max_size]){
+            else if (!maze[c + r * max_size]) {
                 grid[c] = ' ';
             }
         }
         grid[ncols] = '\0';
         mvwprintw(menu_win, r + 1, 1, "%s", grid);
+    }
+    wrefresh(menu_win);
+}
+
+
+/**
+ *   Print a maze, including player/finish positions.
+ *   This prints the maze from a static top-down position,
+ *   but only displays the cells that are line-of-sight visible
+ *   to a player carrying an infinitely-bright light source.
+ */
+void maze_print_medium(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
+{
+    // If we are using ncurses, this should be some sort of mutable buffer.
+    const int open_hall(1);
+    const int player_posi(2);
+    int r(0);
+    int c(0);
+    int cell;
+    int grid[nrows * max_size + ncols];
+    char line[ncols];
+    fill_n(grid, nrows * max_size + ncols, 0);
+
+    menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
+    box(menu_win, 0, 0);
+
+    // start at the player and go in all 4 directions, looking for deadends
+    // try going East
+    r = player[0];
+    c = player[1];
+    while (c < (ncols - 1) && !maze[r * max_size + c]) {
+        grid[r * max_size + c] = open_hall;
+        if (r < (nrows - 1)) {
+            if (!maze[(r + 1) * max_size + c]) {grid[(r + 1) * max_size + c] = open_hall;}
+        }
+        if (r > 0) {
+            if (!maze[(r - 1) * max_size + c]) {grid[(r - 1) * max_size + c] = open_hall;}
+        }
+        c += 1;
+    }
+    // try going West
+    c = player[1];
+    while (c > 0 && !maze[r * max_size + c]) {
+        grid[r * max_size + c] = open_hall;
+        if (r < (nrows - 1)) {
+            if (!maze[(r + 1) * max_size + c]) {grid[(r + 1) * max_size + c] = open_hall;}
+        }
+        if (r > 0) {
+            if (!maze[(r - 1) * max_size + c]) {grid[(r - 1) * max_size + c] = open_hall;}
+        }
+        c -= 1;
+    }
+    // try going North
+    r = player[0];
+    c = player[1];
+    while (r < (nrows - 1) && !maze[r * max_size + c]) {
+        grid[r * max_size + c] = open_hall;
+        if (c < (ncols - 1)) {
+            if (!maze[r * max_size + c + 1]) {grid[r * max_size + c + 1] = open_hall;}
+        }
+        if (c > 0) {
+            if (!maze[r * max_size + c - 1]) {grid[r * max_size + c - 1] = open_hall;}
+        }
+        r += 1;
+    }
+    // try going South
+    r = player[0];
+    while (r < (nrows - 1) && !maze[r * max_size + c]) {
+        grid[r * max_size + c] = open_hall;
+        if (c < (ncols - 1)) {
+            if (!maze[r * max_size + c + 1]) {grid[r * max_size + c + 1] = open_hall;}
+        }
+        if (c > 0) {
+            if (!maze[r * max_size + c - 1]) {grid[r * max_size + c - 1] = open_hall;}
+        }
+        r -= 1;
+    }
+    grid[player[0] * max_size + player[1]] = player_posi;
+
+    // open up hallways
+    // TODO: grid is the wrong variable here
+    for (r=0; r < nrows; r++) {
+        fill_n(line, ncols, ' ');
+        for (c=0; c < ncols; c++) {
+            cell = grid[r * max_size + c];
+            if (cell > 0) {
+                if (cell == open_hall) {
+                    line[c] = '#';
+                } else if (cell == player_posi) {
+                    line[c] = '@';
+                }
+            }
+        }
+        line[ncols] = '\0';
+        mvwprintw(menu_win, r + 1, 1, "%s", line);
     }
     wrefresh(menu_win);
 }

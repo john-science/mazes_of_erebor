@@ -27,7 +27,7 @@ int main()
         } else if (state == menu_diff) {
             state = diff_menu(menu_win);
         } else {
-            state = easy_ui(menu_win);
+            state = easy_ui(menu_win, state);
         }
     }
 

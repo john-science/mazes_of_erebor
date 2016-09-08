@@ -31,11 +31,11 @@ game_state diff_menu(WINDOW *menu_win)
 {
     char const *choices[] = {"Easy", "Medium", "Hard",};
     int n_choices = sizeof(choices) / sizeof(char *);
-    int highlight = 1;
-    int choice = -999;
+    int highlight(1);
+    int choice(-999);
+    int startx(0);
+    int starty(0);
     int c;
-    int startx = 0;
-    int starty = 0;
 
     startx = (WINDOW_WIDTH - MENU_WIDTH) / 2;
     starty = (WINDOW_HEIGHT - MENU_HEIGHT) / 2;
@@ -91,11 +91,11 @@ game_state main_menu(WINDOW *menu_win)
 {
     char const *choices[] = {"Start New", "Quit",};
     int n_choices = sizeof(choices) / sizeof(char *);
-    int highlight = 1;
-    int choice = -999;
+    int highlight(1);
+    int choice(-999);
+    int startx(0);
+    int starty(0);
     int c;
-    int startx = 0;
-    int starty = 0;
 
     startx = (WINDOW_WIDTH - MENU_WIDTH) / 2;
     starty = (WINDOW_HEIGHT - MENU_HEIGHT) / 2;
@@ -146,10 +146,10 @@ game_state main_menu(WINDOW *menu_win)
  */
 void print_menu(WINDOW *menu_win, int highlight, char const **choices, int n_choices)
 {
-    int x, y, i;
+    int i;
+    int x(2);
+    int y(2);
 
-    x = 2;
-    y = 2;
     box(menu_win, 0, 0);
     for(i = 0; i < n_choices; ++i)
     {

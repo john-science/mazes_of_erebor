@@ -5,17 +5,22 @@
 
 // forward declarations
 void success_splash();
-game_state easy_ui(WINDOW *menu_win);
+game_state easy_ui(WINDOW *menu_win, game_state state);
 //game_state medium_ui(WINDOW *menu_win);
 //game_state hard_ui(WINDOW *menu_win);
 
 
-game_state easy_ui(WINDOW *menu_win)
+/**
+ *   The basic maze GUI.
+ *
+ *   Use arrow keys to navigate the maze or type "q" to quit.
+ */
+game_state easy_ui(WINDOW *menu_win, game_state state)
 {
-    const int MAX_SIZE = 71;
+    const int MAX_SIZE(71);
     bool maze[MAX_SIZE * MAX_SIZE];
-    int nrows = 19;
-    int ncols = 31;
+    int nrows(19);
+    int ncols(31);
     int player[2] = {1, 1};
     int finish[2] = {1, 1};
     int c;
@@ -23,9 +28,17 @@ game_state easy_ui(WINDOW *menu_win)
     // generate a new maze
     backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
     gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
-    maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+    //maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
 
     while (true) {
+
+
+        if (state == game_easy) {
+            maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        } else {
+            maze_print_medium(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        }
+
         // input and update
         c = getch();
         switch (c) {
@@ -59,6 +72,7 @@ game_state easy_ui(WINDOW *menu_win)
         if (player[0] == finish[0] && player[1] == finish[1]) {
             success_splash();
 
+            // TODO: This could be more interesting.
             // increase the size of the maze (to a limit)
             if (ncols < MAX_SIZE) {
                 ncols += 2;
@@ -70,8 +84,12 @@ game_state easy_ui(WINDOW *menu_win)
             backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
             gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
         }
-
-        maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+/**
+        if (state == game_easy) {
+            maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        } else {
+            maze_print_medium(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        }*/
     }
 
     clear();
