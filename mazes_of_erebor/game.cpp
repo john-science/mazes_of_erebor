@@ -11,25 +11,25 @@ void get_new_dims(int& nrows, int& ncols, int count);
 game_state game_ui(WINDOW *menu_win, game_state state);
 
 // constants for splash screen
-char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
+const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
-char* splash_success[] = {"You found a way out!",
-                          "You are through the maze!",
-                          "You did it!",
-                          "You found your way through the maze!",
-                          "You found the end of the laybrinth!",};
+const char* splash_success[] = {"You found a way out!",
+                                "You are through the maze!",
+                                "You did it!",
+                                "You found your way through the maze!",
+                                "You found the end of the laybrinth!",};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
-char* splash_story[] = {"You kick over a dusty old pile of Orcish remains that\n block the staircase.",
-                        "You take a short rest before taking the staircase down.",
-                        "At the end of the maze you find a staircase leading down.",
-                        "You find a staircase leading down and follow it.",
-                        "You delve deeper.",
-                        "Deeper and deeper into the Halls of the Mountain King...",
-                        "You find a curving ramp leading down into the mountain.",
-                        "You find a narrow staircase leading down into the mountain.",
-                        "How deep under the mountain does these tunnels go?",
-                        "Above the stone doorway you find an engraved\n scene of a human archer killing a dragon.",
-                        "Engraved along the walls of the spiral staircase\n are scenes of a dwarf being buried with a glowing gem."};
+const char* splash_story[] = {"You kick over a dusty old pile of Orcish remains that\n block the staircase.",
+                              "You take a short rest before taking the staircase down.",
+                              "At the end of the maze you find a staircase leading down.",
+                              "You find a staircase leading down and follow it.",
+                              "You delve deeper.",
+                              "Deeper and deeper into the Halls of the Mountain King...",
+                              "You find a curving ramp leading further down into the mountain.",
+                              "You find a narrow staircase leading down into the mountain.",
+                              "How deep under the mountain does these tunnels go?",
+                              "Above the stone doorway you find an engraved\n scene of a human archer killing a dragon.",
+                              "Engraved along the walls of the spiral staircase\n are scenes of a dwarf being buried with a glowing gem."};
 const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 
 
@@ -129,11 +129,13 @@ void get_new_dims(int& nrows, int& ncols, int count) {
 void success_splash(int count) {
     clear();
 
-    mvprintw(1, 1, (std::string(splash_exclaim[rand() % n_splash_exclaim]) + std::string(splash_success[rand() % n_splash_success])).c_str());
+    mvprintw(1, 1, (std::string(splash_exclaim[rand() % n_splash_exclaim]) +
+                    std::string(splash_success[rand() % n_splash_success])).c_str());
     mvprintw(3, 1, splash_story[rand() % n_splash_story]);
-    mvprintw(7, 1, (std::string("You are ") + std::to_string(count) + std::string(" levels under Erebor.")).c_str());
+    mvprintw(7, 1, (std::string("You are ") +
+                    std::to_string(count) +
+                    std::string(" levels under Erebor.")).c_str());
 
     refresh();
-
     getch();
 }

@@ -21,7 +21,7 @@ int main()
     curs_set(false);       // disable cursor
     keypad(stdscr, true);  // enable key pad
 
-    srand(time(0));  // TODO: Move to main? What's the difference?
+    srand(time(0));
 
     // master game FSM
     while (state != quit) {

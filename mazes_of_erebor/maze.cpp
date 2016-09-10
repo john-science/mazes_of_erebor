@@ -264,7 +264,6 @@ void maze_print_medium(WINDOW *menu_win, bool maze[], int max_size, int nrows, i
     grid[player[0] * max_size + player[1]] = player_posi;
 
     // open up hallways
-    // TODO: grid is the wrong variable here
     for (r=0; r < nrows; r++) {
         fill_n(line, ncols, ' ');
         for (c=0; c < ncols; c++) {
