@@ -1,11 +1,36 @@
 
+#include <random>
 #include <ncurses.h>
+#include <string.h>
 #include "maze.h"
 #include "menu.h"
 
 // forward declarations
-void success_splash();
+void success_splash(int count);
+void get_new_dims(int& nrows, int& ncols, int count);
 game_state game_ui(WINDOW *menu_win, game_state state);
+
+// constants for splash screen
+char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
+const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
+char* splash_success[] = {"You found a way out!",
+                          "You are through the maze!",
+                          "You did it!",
+                          "You found your way through the maze!",
+                          "You found the end of the laybrinth!",};
+const int n_splash_success = sizeof(splash_success) / sizeof(char *);
+char* splash_story[] = {"You kick over a dusty old pile of Orcish remains that\n block the staircase.",
+                        "You take a short rest before taking the staircase down.",
+                        "At the end of the maze you find a staircase leading down.",
+                        "You find a staircase leading down and follow it.",
+                        "You delve deeper.",
+                        "Deeper and deeper into the Halls of the Mountain King...",
+                        "You find a curving ramp leading down into the mountain.",
+                        "You find a narrow staircase leading down into the mountain.",
+                        "How deep under the mountain does these tunnels go?",
+                        "Above the stone doorway you find an engraved\n scene of a human archer killing a dragon.",
+                        "Engraved along the walls of the spiral staircase\n are scenes of a dwarf being buried with a glowing gem."};
+const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 
 
 /**
@@ -21,7 +46,7 @@ game_state game_ui(WINDOW *menu_win, game_state state)
     int ncols(31);
     int player[2] = {1, 1};
     int finish[2] = {1, 1};
-    int count(0):
+    int count(0);
     int c;
 
     // generate a new maze
@@ -66,19 +91,14 @@ game_state game_ui(WINDOW *menu_win, game_state state)
 
         // If you reach the end, start over in a new maze
         if (player[0] == finish[0] && player[1] == finish[1]) {
-            success_splash();
+            success_splash(count + 2);
+            get_new_dims(nrows, ncols, count);
 
-            // TODO: This could be more interesting.
-            // increase the size of the maze (to a limit)
-            if (ncols < MAX_SIZE) {
-                ncols += 2;
-            }
-            if (nrows < (MAX_SIZE / 2)) {
-                nrows += 2;
-            }
             // generate a new maze
             backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
             gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
+
+            count += 1;
         }
     }
 
@@ -106,10 +126,13 @@ void get_new_dims(int& nrows, int& ncols, int count) {
  *  A quick splash screen to congratulate the player on finishing the maze.
  *  NOTE: This is partially just a place-holder for a better splash screen.
  */
-void success_splash() {
+void success_splash(int count) {
     clear();
-    mvprintw(1, 1, "Success! You found your way through the maze.");
-    mvprintw(3, 1, "You delver deeper into Erebor...");
+
+    mvprintw(1, 1, (std::string(splash_exclaim[rand() % n_splash_exclaim]) + std::string(splash_success[rand() % n_splash_success])).c_str());
+    mvprintw(3, 1, splash_story[rand() % n_splash_story]);
+    mvprintw(7, 1, (std::string("You are ") + std::to_string(count) + std::string(" levels under Erebor.")).c_str());
+
     refresh();
 
     getch();

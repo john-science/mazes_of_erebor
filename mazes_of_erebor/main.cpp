@@ -1,4 +1,5 @@
 
+#include <random>
 #include <ncurses.h>
 #include "menu.h"
 #include "game.h"
@@ -19,6 +20,8 @@ int main()
     cbreak();              // disable line buffering
     curs_set(false);       // disable cursor
     keypad(stdscr, true);  // enable key pad
+
+    srand(time(0));  // TODO: Move to main? What's the difference?
 
     // master game FSM
     while (state != quit) {

@@ -82,7 +82,6 @@ void backtracking_maze_gen(bool maze[], int max_size, int nrows, int ncols)
     fill_n(maze, max_size * max_size, true);
 
     // pick a random starting point
-    srand(time(0));  // TODO: Move to main? What's the difference?
     row = 1 + 2 * (rand() % ((nrows - 1) / 2));
     col = 1 + 2 * (rand() % ((ncols - 1) / 2));
     track.push(row);
