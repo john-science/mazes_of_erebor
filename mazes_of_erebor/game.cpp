@@ -5,9 +5,7 @@
 
 // forward declarations
 void success_splash();
-game_state easy_ui(WINDOW *menu_win, game_state state);
-//game_state medium_ui(WINDOW *menu_win);
-//game_state hard_ui(WINDOW *menu_win);
+game_state game_ui(WINDOW *menu_win, game_state state);
 
 
 /**
@@ -15,7 +13,7 @@ game_state easy_ui(WINDOW *menu_win, game_state state);
  *
  *   Use arrow keys to navigate the maze or type "q" to quit.
  */
-game_state easy_ui(WINDOW *menu_win, game_state state)
+game_state game_ui(WINDOW *menu_win, game_state state)
 {
     const int MAX_SIZE(71);
     bool maze[MAX_SIZE * MAX_SIZE];
@@ -23,16 +21,14 @@ game_state easy_ui(WINDOW *menu_win, game_state state)
     int ncols(31);
     int player[2] = {1, 1};
     int finish[2] = {1, 1};
+    int count(0):
     int c;
 
     // generate a new maze
     backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
     gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
-    //maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
 
     while (true) {
-
-
         if (state == game_easy) {
             maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
         } else {
@@ -84,15 +80,25 @@ game_state easy_ui(WINDOW *menu_win, game_state state)
             backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
             gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
         }
-/**
-        if (state == game_easy) {
-            maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
-        } else {
-            maze_print_medium(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
-        }*/
     }
 
     clear();
+}
+
+
+/**
+ *   Randomly generate maze dimensions.
+ */
+void get_new_dims(int& nrows, int& ncols, int count) {
+    count %= 20;
+
+    const int bottom_y = 15;
+    nrows = bottom_y + count / 2 + (rand() % (int)(count / 2 + 1));
+    if (nrows % 2 == 0) { nrows += 1; }
+
+    const int bottom_x = 31;
+    ncols = bottom_x + count + (rand() % (int)((count) + 1));
+    if (ncols % 2 == 0) { ncols += 1; }
 }
 
 

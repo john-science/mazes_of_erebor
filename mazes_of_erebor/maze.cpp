@@ -164,25 +164,27 @@ void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[
  */
 void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
 {
-    // If we are using ncurses, this should be some sort of mutable buffer.
-    char grid[ncols];
-
     menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
     box(menu_win, 0, 0);
 
+    start_color();
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_WHITE, COLOR_WHITE);
+
     // open up hallways
     for (int r=0; r < nrows; r++) {
-        fill_n(grid, ncols, '#');
         for (int c=0; c < ncols; c++) {
             if (player[0] == r && player[1] == c) {
-                grid[c] = '@';
-            }
-            else if (!maze[c + r * max_size]) {
-                grid[c] = ' ';
+                wattron(menu_win, COLOR_PAIR(1));
+                mvwprintw(menu_win, r + 1, c + 1, "@");  // player
+            } else if (!maze[c + r * max_size]) {
+                wattron(menu_win, COLOR_PAIR(1));
+                mvwprintw(menu_win, r + 1, c + 1, " ");  // hallway
+            } else {
+                wattron(menu_win, COLOR_PAIR(2));
+                mvwprintw(menu_win, r + 1, c + 1, "#");  // wall
             }
         }
-        grid[ncols] = '\0';
-        mvwprintw(menu_win, r + 1, 1, "%s", grid);
     }
     wrefresh(menu_win);
 }
