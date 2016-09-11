@@ -1,11 +1,12 @@
 
 #include <ncurses.h>
 
+// TODO: Should these be in the header, so everyone can play with them?
+//       Or should they be in main, or in a window class?
 #define MENU_WIDTH 30
 #define MENU_HEIGHT 10
 #define WINDOW_WIDTH 80
 #define WINDOW_HEIGHT 22
-
 
 /**
  * TODO: build continuable menus

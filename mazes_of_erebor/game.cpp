@@ -56,8 +56,10 @@ game_state game_ui(WINDOW *menu_win, game_state state)
     while (true) {
         if (state == game_easy) {
             maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
-        } else {
+        } else if (state == game_medium) {
             maze_print_medium(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
+        } else {
+            maze_print_hard(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
         }
 
         // input and update
