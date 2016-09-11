@@ -197,7 +197,7 @@ void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_medium(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
+void maze_print_medium(WINDOW *menu_win, bool maze[], bool visited[], int max_size, int nrows, int ncols, int player[], int finish[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -216,6 +216,7 @@ void maze_print_medium(WINDOW *menu_win, bool maze[], int max_size, int nrows, i
     init_pair(1, COLOR_RED, COLOR_WHITE);
     init_pair(2, COLOR_WHITE, COLOR_WHITE);
     init_pair(3, COLOR_BLACK, COLOR_BLACK);
+    init_pair(4, COLOR_RED, COLOR_RED);  // TODO: Smokey Gray or a Dull Fire Red?
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -275,8 +276,13 @@ void maze_print_medium(WINDOW *menu_win, bool maze[], int max_size, int nrows, i
         for (c=0; c < ncols; c++) {
             cell = grid[r * max_size + c];
             if (cell == 0) {
-                wattron(menu_win, COLOR_PAIR(3));
-                mvwprintw(menu_win, r + 1, c + 1, " ");  // empty
+                if (visited[r * max_size + c]) {
+                    wattron(menu_win, COLOR_PAIR(4));
+                    mvwprintw(menu_win, r + 1, c + 1, " ");  // visited
+                } else {
+                    wattron(menu_win, COLOR_PAIR(3));
+                    mvwprintw(menu_win, r + 1, c + 1, " ");  // empty
+                }
             } else if (cell == open_hall) {
                 wattron(menu_win, COLOR_PAIR(2));
                 mvwprintw(menu_win, r + 1, c + 1, "#");  // hallway

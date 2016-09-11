@@ -3,7 +3,7 @@
 #define MENU_H
 
 enum game_state {menu_main, menu_diff,
-                 game_easy, game_medium, game_hard, game_intro, game_splash,
+                 game_easy, game_medium, game_hard,
                  quit};
 
 void print_menu(WINDOW *menu_win, int highlight, char const **choices, int n_choices);

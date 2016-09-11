@@ -128,15 +128,16 @@ game_state main_menu(WINDOW *menu_win)
                 choice = highlight;
                 break;
             default:
-                mvprintw(WINDOW_HEIGHT, 0, "Charcter pressed was %3d Hopefully it can be printed as '%c' ", c, c);
+                mvprintw(WINDOW_HEIGHT, 0, "Charcter pressed was %3d Hopefully it can be printed as '%c' ", highlight, c);
+                mvprintw(WINDOW_HEIGHT + 1, 0, "Charcter pressed was %3d Hopefully it can be printed as '%c' ", n_choices, c);
                 refresh();
                 break;
         }
         print_menu(menu_win, highlight, choices, n_choices);
-        if (choice == n_choices) {
-            return quit;
-        } else if (choice == 1) {
+        if (choice == 1) {
             return menu_diff;
+        } else if (choice == 2) {
+            return quit;
         }
     }
 }

@@ -9,6 +9,7 @@
 void success_splash(int count);
 void get_new_dims(int& nrows, int& ncols, int count);
 game_state game_ui(WINDOW *menu_win, game_state state);
+game_state game_ui_medium(WINDOW *menu_win);
 
 // constants for splash screen
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
@@ -56,9 +57,7 @@ game_state game_ui(WINDOW *menu_win, game_state state)
     while (true) {
         if (state == game_easy) {
             maze_print_easy(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
-        } else if (state == game_medium) {
-            maze_print_medium(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
-        } else {
+        } else if (state == game_hard) {
             maze_print_hard(menu_win, maze, MAX_SIZE, nrows, ncols, player, finish);
         }
 
@@ -97,6 +96,79 @@ game_state game_ui(WINDOW *menu_win, game_state state)
             get_new_dims(nrows, ncols, count);
 
             // generate a new maze
+            backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
+            gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
+
+            count += 1;
+        }
+    }
+
+    clear();
+}
+
+
+/**
+ *   The basic maze GUI.
+ *
+ *   Use arrow keys to navigate the maze or type "q" to quit.
+ */
+game_state game_ui_medium(WINDOW *menu_win)
+{
+    const int MAX_SIZE(71);
+    bool maze[MAX_SIZE * MAX_SIZE];
+    bool visited[MAX_SIZE * MAX_SIZE];
+    int nrows(19);
+    int ncols(31);
+    int player[2] = {1, 1};
+    int finish[2] = {1, 1};
+    int count(0);
+    int c;
+
+    // generate a new maze
+    std::fill_n(visited, MAX_SIZE * MAX_SIZE, false);
+    backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
+    gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
+
+    while (true) {
+        maze_print_medium(menu_win, maze, visited, MAX_SIZE, nrows, ncols, player, finish);
+
+        // input and update
+        c = getch();
+        switch (c) {
+            case KEY_UP:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0] - 1, player[1])) {
+                    player[0] -= 1;
+                }
+                break;
+            case KEY_DOWN:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0] + 1, player[1])) {
+                    player[0] += 1;
+                }
+                break;
+            case KEY_LEFT:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0], player[1] - 1)) {
+                    player[1] -= 1;
+                }
+                break;
+            case KEY_RIGHT:
+                if (maze_valid_move(maze, MAX_SIZE, nrows, ncols, player[0], player[1] + 1)) {
+                    player[1] += 1;
+                }
+                break;
+            case 113:  // q
+                return menu_main;
+            default:
+                break;
+        }
+        visited[player[0] * MAX_SIZE + player[1]] = true;
+
+        // If you reach the end, start over in a new maze
+        if (player[0] == finish[0] && player[1] == finish[1]) {
+            success_splash(count + 2);
+            get_new_dims(nrows, ncols, count);
+
+            // generate a new maze
+            std::fill_n(visited, MAX_SIZE * MAX_SIZE, false);
             backtracking_maze_gen(maze, MAX_SIZE, nrows, ncols);
             gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
 

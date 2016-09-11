@@ -29,8 +29,12 @@ int main()
             state = main_menu(menu_win);  // TODO: Warning: menu_win un-init
         } else if (state == menu_diff) {
             state = diff_menu(menu_win);
-        } else {
+        } else if (state == game_medium) {
+            state = game_ui_medium(menu_win);
+        } else if (state == game_easy || state == game_hard){
             state = game_ui(menu_win, state);
+        } else {
+            state = quit;
         }
     }
 
