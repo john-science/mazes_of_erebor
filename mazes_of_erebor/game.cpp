@@ -130,6 +130,7 @@ game_state game_ui_medium(WINDOW *menu_win)
     gen_entrances_opposites(maze, MAX_SIZE, player, finish, nrows, ncols);
 
     while (true) {
+        visited[player[0] * MAX_SIZE + player[1]] = true;
         maze_print_medium(menu_win, maze, visited, MAX_SIZE, nrows, ncols, player, finish);
 
         // input and update
@@ -160,7 +161,6 @@ game_state game_ui_medium(WINDOW *menu_win)
             default:
                 break;
         }
-        visited[player[0] * MAX_SIZE + player[1]] = true;
 
         // If you reach the end, start over in a new maze
         if (player[0] == finish[0] && player[1] == finish[1]) {
