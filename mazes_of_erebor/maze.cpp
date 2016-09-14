@@ -1,8 +1,10 @@
+
 #include <iostream>
 #include <ncurses.h>
 #include <stack>
 #include <algorithm>
 #include <random>
+#include "windows.h"
 
 using namespace std;
 
@@ -155,7 +157,6 @@ void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[
 }
 
 
-
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,
@@ -163,26 +164,22 @@ void gen_entrances_opposites(bool maze[], int max_size, int start[], int finish[
  */
 void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int ncols, int player[], int finish[])
 {
-    menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
-    box(menu_win, 0, 0);
-
-    // TODO: Can I start color in main?
-    start_color();
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(2, COLOR_WHITE, COLOR_WHITE);
+    init_maze_window(menu_win);
+    int c_off(1 + (71 - ncols) / 2);
+    int r_off(1 + (35 - nrows) / 2);
 
     // open up hallways
     for (int r=0; r < nrows; r++) {
         for (int c=0; c < ncols; c++) {
             if (player[0] == r && player[1] == c) {
-                wattron(menu_win, COLOR_PAIR(1));
-                mvwprintw(menu_win, r + 1, c + 1, "@");  // player
+                wattron(menu_win, COLOR_PAIR(6));
+                mvwprintw(menu_win, r + r_off, c + c_off, "@");  // player
             } else if (!maze[c + r * max_size]) {
-                wattron(menu_win, COLOR_PAIR(1));
-                mvwprintw(menu_win, r + 1, c + 1, " ");  // hallway
+                wattron(menu_win, COLOR_PAIR(6));
+                mvwprintw(menu_win, r + r_off, c + c_off, " ");  // hallway
             } else {
-                wattron(menu_win, COLOR_PAIR(2));
-                mvwprintw(menu_win, r + 1, c + 1, "#");  // wall
+                wattron(menu_win, COLOR_PAIR(3));
+                mvwprintw(menu_win, r + r_off, c + c_off, "#");  // wall
             }
         }
     }
@@ -190,7 +187,6 @@ void maze_print_easy(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
 }
 
 
-// TODO: Add a gray track for where you've been.
 /**
  *   Print a maze, including player/finish positions.
  *   This prints the maze from a static top-down position,
@@ -208,15 +204,7 @@ void maze_print_medium(WINDOW *menu_win, bool maze[], bool visited[], int max_si
     int grid[nrows * max_size + ncols];
     fill_n(grid, nrows * max_size + ncols, 0);
 
-    menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
-    box(menu_win, 0, 0);
-
-    // TODO: Can I start color in main?
-    start_color();
-    init_pair(1, COLOR_RED, COLOR_WHITE);
-    init_pair(2, COLOR_WHITE, COLOR_WHITE);
-    init_pair(3, COLOR_BLACK, COLOR_BLACK);
-    init_pair(4, COLOR_RED, COLOR_RED);  // TODO: Smokey Gray or a Dull Fire Red?
+    init_maze_window(menu_win);  // TODO: change menu_win to win in this file
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -271,24 +259,28 @@ void maze_print_medium(WINDOW *menu_win, bool maze[], bool visited[], int max_si
     }
     grid[player[0] * max_size + player[1]] = player_posi;
 
+    // offsets for printing
+    int c_off(1 + (71 - ncols) / 2);
+    int r_off(1 + (35 - nrows) / 2);
+
     // open up hallways
     for (r=0; r < nrows; r++) {
         for (c=0; c < ncols; c++) {
             cell = grid[r * max_size + c];
             if (cell == 0) {
                 if (visited[r * max_size + c]) {
-                    wattron(menu_win, COLOR_PAIR(4));
-                    mvwprintw(menu_win, r + 1, c + 1, " ");  // visited
+                    wattron(menu_win, COLOR_PAIR(5));
+                    mvwprintw(menu_win, r + r_off, c + c_off, " ");  // visited
                 } else {
-                    wattron(menu_win, COLOR_PAIR(3));
-                    mvwprintw(menu_win, r + 1, c + 1, " ");  // empty
+                    wattron(menu_win, COLOR_PAIR(1));
+                    mvwprintw(menu_win, r + r_off, c + c_off, " ");  // empty
                 }
             } else if (cell == open_hall) {
-                wattron(menu_win, COLOR_PAIR(2));
-                mvwprintw(menu_win, r + 1, c + 1, "#");  // hallway
+                wattron(menu_win, COLOR_PAIR(3));
+                mvwprintw(menu_win, r + r_off, c + c_off, "#");  // hallway
             } else if (cell == player_posi) {
-                wattron(menu_win, COLOR_PAIR(1));
-                mvwprintw(menu_win, r + 1, c + 1, "@");  // player
+                wattron(menu_win, COLOR_PAIR(2));
+                mvwprintw(menu_win, r + r_off, c + c_off, "@");  // player
             }
         }
     }
@@ -313,16 +305,7 @@ void maze_print_hard(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
     int grid[nrows * max_size + ncols];
     fill_n(grid, nrows * max_size + ncols, 0);
 
-    menu_win = newwin(37, 73, 0, 0);  // TODO: Testing
-    box(menu_win, 0, 0);
-
-    // TODO: Can I start color in main?
-    start_color();
-    init_pair(1, COLOR_BLACK, COLOR_BLACK);
-    init_pair(2, COLOR_RED, COLOR_WHITE);
-    init_pair(3, COLOR_WHITE, COLOR_WHITE);
-    init_pair(4, COLOR_YELLOW, COLOR_YELLOW);
-    init_pair(5, COLOR_RED, COLOR_RED);
+    init_maze_window(menu_win);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -377,6 +360,11 @@ void maze_print_hard(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
     }
     grid[player[0] * max_size + player[1]] = player_posi;
 
+    // TODO: Magic Numbers
+    // offsets for printing
+    int c_off(1 + (71 - ncols) / 2);
+    int r_off(1 + (35 - nrows) / 2);
+
     // open up hallways
     int diff;
     for (r=0; r < nrows; r++) {
@@ -384,7 +372,7 @@ void maze_print_hard(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
             cell = grid[r * max_size + c];
             if (cell == 0) {
                 wattron(menu_win, COLOR_PAIR(1));
-                mvwprintw(menu_win, r + 1, c + 1, " ");  // empty
+                mvwprintw(menu_win, r + r_off, c + c_off, " ");  // empty
             } else if (cell == open_hall) {
                 // different colors depending on how far away the torch light reaches
                 diff = abs(player[0] - r) + abs(player[1] - c);
@@ -397,10 +385,10 @@ void maze_print_hard(WINDOW *menu_win, bool maze[], int max_size, int nrows, int
                 } else {
                     wattron(menu_win, COLOR_PAIR(1));
                 }
-                mvwprintw(menu_win, r + 1, c + 1, "#");  // hallway
+                mvwprintw(menu_win, r + r_off, c + c_off, "#");  // hallway
             } else if (cell == player_posi) {
                 wattron(menu_win, COLOR_PAIR(2));
-                mvwprintw(menu_win, r + 1, c + 1, "@");  // player
+                mvwprintw(menu_win, r + r_off, c + c_off, "@");  // player
             }
         }
     }

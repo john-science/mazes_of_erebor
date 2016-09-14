@@ -131,6 +131,7 @@ game_state game_ui_medium(WINDOW *menu_win)
 
     while (true) {
         visited[player[0] * MAX_SIZE + player[1]] = true;
+        visited[finish[0] * MAX_SIZE + finish[1]] = true;
         maze_print_medium(menu_win, maze, visited, MAX_SIZE, nrows, ncols, player, finish);
 
         // input and update
