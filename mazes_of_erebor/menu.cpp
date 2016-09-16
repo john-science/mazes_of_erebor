@@ -2,13 +2,6 @@
 #include <ncurses.h>
 #include "windows.h"
 
-// TODO: Should these be in the header, so everyone can play with them?
-//       Or should they be in main, or in a window class?
-#define MENU_WIDTH 30
-#define MENU_HEIGHT 10
-#define WINDOW_WIDTH 80
-#define WINDOW_HEIGHT 22
-
 /**
  * TODO: build continuable menus
 char const *choices_cont[] = {"Start New", "Continue", "Quit",};
@@ -88,6 +81,7 @@ game_state main_menu(WINDOW *win)
     int highlight(1);
     int choice(-999);
     int c;
+    int new_x, new_y;
 
     init_menu_window(win);
     mvprintw(1, WINDOW_WIDTH / 2 - 10, "The Halls of Erebor");
@@ -112,10 +106,12 @@ game_state main_menu(WINDOW *win)
             case 10:  // enter
                 choice = highlight;
                 break;
-            default:
-                mvprintw(WINDOW_HEIGHT, 0, "Charcter pressed was %3d Hopefully it can be printed as '%c' ", c, c);
+            case 410:  // window resize
+                getmaxyx(stdscr, new_y, new_x);
+                mvprintw(WINDOW_HEIGHT / 2 - 1, 1, "%3d %3d ", new_x, new_y);
                 refresh();
                 break;
+            // no default actions to be taken
         }
         print_menu(win, highlight, choices, n_choices);
         if (choice == 1) {

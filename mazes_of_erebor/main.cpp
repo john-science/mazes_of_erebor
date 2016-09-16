@@ -6,6 +6,8 @@
 #include "windows.h"
 
 
+// TODO: The game crashes if you try to resize the maze!
+
 /**
  *  Master game FSM and GUI setup
  */
@@ -20,7 +22,7 @@ int main()
     // worlds simplest state machine
     while (state != quit) {
         if (state == menu_main) {
-            state = main_menu(win);  // TODO: Warning: menu_win un-init
+            state = main_menu(win);
         } else if (state == menu_diff) {
             state = diff_menu(win);
         } else if (state == game_medium) {

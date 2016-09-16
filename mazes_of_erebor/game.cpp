@@ -4,6 +4,7 @@
 #include <string.h>
 #include "maze.h"
 #include "menu.h"
+#include "windows.h"
 
 // forward declarations
 void success_splash(int count);
@@ -14,12 +15,16 @@ game_state game_ui_medium(WINDOW *menu_win);
 // constants for splash screen
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
-const char* splash_success[] = {"You found a way out!",
+const char* splash_success[] = {"You did it!",
+                                "You solved it!",
+                                "You solved the maze!",
+                                "You found a way out!",
                                 "You are through the maze!",
-                                "You did it!",
                                 "You found your way through the maze!",
+                                "You are through!"
                                 "You found the end of the laybrinth!",};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
+// TODO: Add more of these
 const char* splash_story[] = {"You kick over a dusty old pile of Orcish remains that\n block the staircase.",
                               "You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
@@ -41,8 +46,8 @@ const int n_splash_story = sizeof(splash_story) / sizeof(char *);
  */
 game_state game_ui(WINDOW *menu_win, game_state state)
 {
-    const int MAX_SIZE(71);
-    bool maze[MAX_SIZE * MAX_SIZE];
+    const int MAX_SIZE(WINDOW_WIDTH - 2);
+    bool maze[MAX_SIZE * MAX_SIZE / 2];
     int nrows(19);
     int ncols(31);
     int player[2] = {1, 1};
@@ -114,9 +119,9 @@ game_state game_ui(WINDOW *menu_win, game_state state)
  */
 game_state game_ui_medium(WINDOW *menu_win)
 {
-    const int MAX_SIZE(71);
-    bool maze[MAX_SIZE * MAX_SIZE];
-    bool visited[MAX_SIZE * MAX_SIZE];
+    const int MAX_SIZE(WINDOW_WIDTH - 2);
+    bool maze[MAX_SIZE * MAX_SIZE /2];
+    bool visited[MAX_SIZE * MAX_SIZE / 2];
     int nrows(19);
     int ncols(31);
     int player[2] = {1, 1};
@@ -197,6 +202,7 @@ void get_new_dims(int& nrows, int& ncols, int count) {
 }
 
 
+// TODO: Put in a box, and handle longer sentences (split on spaces?).
 /**
  *  A quick splash screen to congratulate the player on finishing the maze.
  *  NOTE: This is partially just a place-holder for a better splash screen.
