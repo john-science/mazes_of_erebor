@@ -63,10 +63,9 @@ void init_menu_window(WINDOW *win, int win_y, int win_x) {
  */
 void init_maze_window(WINDOW *win) {
     int win_y, win_x;
+    mvwin(win, 0, 0);
     getmaxyx(stdscr, win_y, win_x);
-    *win = *newwin(win_y, win_x, 0, 0);
-    keypad(win, TRUE);
-    clear();
-    //box(win, 0, 0);
-    //wrefresh(win);
+    wresize(win, win_y, win_x);
+    wclear(win);
+    box(win, 0, 0);
 }
