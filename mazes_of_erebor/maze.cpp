@@ -166,6 +166,7 @@ void gen_entrances_opposites(maze_data *maze, int start[], int finish[])
 }
 
 
+// TODO: Does this work if the window is smaller than the maze?
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,
@@ -175,7 +176,6 @@ void maze_print_easy(WINDOW *win, const maze_data maze, int player[], int finish
 {
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
-    //init_maze_window(win, win_y, win_x);
     int c_off(1 + ((win_x - maze.ncols - 2) / 2));
     int r_off(1 + ((win_y - maze.nrows - 2) / 2));
     if (c_off < 1) { c_off = 1; }
@@ -194,6 +194,9 @@ void maze_print_easy(WINDOW *win, const maze_data maze, int player[], int finish
             if (player[0] == r && player[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "@");  // player
+            } else if (finish[0] == r && finish[1] == c) {
+                wattron(win, COLOR_PAIR(6));
+                mvwprintw(win, r + r_off, c + c_off, "X");  // finish
             } else if (!maze.grid[c + r * maze.max_size]) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, " ");  // hallway
@@ -219,6 +222,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
     const int player_posi(2);
+    const int finish_posi(3);
     int r(0);
     int c(0);
     int cell;
@@ -226,7 +230,6 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
     fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);  // TODO: Dims all wrong?
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
-    //init_maze_window(win);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -280,6 +283,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
         r -= 1;
     }
     grid[player[0] * maze.max_size + player[1]] = player_posi;
+    grid[finish[0] * maze.max_size + finish[1]] = finish_posi;
 
     // offsets for printing
     int c_off(1 + (win_x - 2 - maze.ncols) / 2);
@@ -304,6 +308,9 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
             } else if (cell == player_posi) {
                 wattron(win, COLOR_PAIR(2));
                 mvwprintw(win, r + r_off, c + c_off, "@");      // player
+            } else if (cell == finish_posi) {
+                wattron(win, COLOR_PAIR(2));
+                mvwprintw(win, r + r_off, c + c_off, "X");      // finish
             }
         }
     }
@@ -330,7 +337,6 @@ void maze_print_hard(WINDOW *win, const maze_data maze, int player[], int finish
     fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
-    //init_maze_window(win);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -399,18 +405,23 @@ void maze_print_hard(WINDOW *win, const maze_data maze, int player[], int finish
                 mvwprintw(win, r + r_off, c + c_off, " ");  // wall
                 wattroff(win, COLOR_PAIR(1));  // necessary to fix game window box color
             } else if (cell == open_hall) {
-                // different colors depending on how far away the torch light reaches
-                diff = abs(player[0] - r) + abs(player[1] - c);
-                if (diff < 2){
-                    wattron(win, COLOR_PAIR(3));
-                } else if (diff < 4){
-                    wattron(win, COLOR_PAIR(4));
-                } else if (diff < 6){
-                    wattron(win, COLOR_PAIR(5));
+                if (r == finish[0] && c == finish[1]) {
+                    wattron(win, COLOR_PAIR(2));
+                    mvwprintw(win, r + r_off, c + c_off, "X");  // finish
                 } else {
-                    wattron(win, COLOR_PAIR(1));
+                    // different colors depending on how far away the torch light reaches
+                    diff = abs(player[0] - r) + abs(player[1] - c);
+                    if (diff < 2){
+                        wattron(win, COLOR_PAIR(3));
+                    } else if (diff < 4){
+                        wattron(win, COLOR_PAIR(4));
+                    } else if (diff < 6){
+                        wattron(win, COLOR_PAIR(5));
+                    } else {
+                        wattron(win, COLOR_PAIR(1));
+                    }
+                    mvwprintw(win, r + r_off, c + c_off, "#");  // hallway
                 }
-                mvwprintw(win, r + r_off, c + c_off, "#");  // hallway
             } else if (cell == player_posi) {
                 wattron(win, COLOR_PAIR(2));
                 mvwprintw(win, r + r_off, c + c_off, "@");  // player
