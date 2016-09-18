@@ -6,8 +6,6 @@
 #include "windows.h"
 
 
-// TODO: The game crashes if you try to resize the maze!
-
 /**
  *  Master game FSM and GUI setup
  */

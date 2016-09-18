@@ -28,10 +28,11 @@ game_state diff_menu(WINDOW *win)
     int n_choices = sizeof(choices) / sizeof(char *);
     int highlight(1);
     int choice(-999);
-    int c;
+    int c, win_y, win_x;
 
-    init_menu_window(win);
-    mvprintw(3, WINDOW_WIDTH / 2 - 17, "May you live in interesting times.");
+    getmaxyx(stdscr, win_y, win_x);
+    init_menu_window(win, win_y, win_x);
+    mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");
     refresh();
 
     print_menu(win, highlight, choices, n_choices);
@@ -54,8 +55,13 @@ game_state diff_menu(WINDOW *win)
             case 10:  // enter key
                 choice = highlight;
                 break;
-            default:
+            case 410:  // window resize
+                getmaxyx(stdscr, win_y, win_x);
+                init_menu_window(win, win_y, win_x);
+                mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");
+                refresh();
                 break;
+            // no default actions to be taken
         }
         // display
         print_menu(win, highlight, choices, n_choices);
@@ -80,11 +86,11 @@ game_state main_menu(WINDOW *win)
     int n_choices = sizeof(choices) / sizeof(char *);
     int highlight(1);
     int choice(-999);
-    int c;
-    int new_x, new_y;
+    int c, win_y, win_x;
 
-    init_menu_window(win);
-    mvprintw(1, WINDOW_WIDTH / 2 - 10, "The Halls of Erebor");
+    getmaxyx(stdscr, win_y, win_x);
+    init_menu_window(win, win_y, win_x);
+    mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");
     refresh();
 
     print_menu(win, highlight, choices, n_choices);
@@ -107,8 +113,9 @@ game_state main_menu(WINDOW *win)
                 choice = highlight;
                 break;
             case 410:  // window resize
-                getmaxyx(stdscr, new_y, new_x);
-                mvprintw(WINDOW_HEIGHT / 2 - 1, 1, "%3d %3d ", new_x, new_y);
+                getmaxyx(stdscr, win_y, win_x);
+                init_menu_window(win, win_y, win_x);
+                mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");
                 refresh();
                 break;
             // no default actions to be taken

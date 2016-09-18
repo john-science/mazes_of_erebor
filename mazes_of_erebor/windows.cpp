@@ -2,21 +2,21 @@
 #include <ncurses.h>
 
 // global variables
-const int WINDOW_WIDTH(73);
-const int WINDOW_HEIGHT(1 + WINDOW_WIDTH / 2);
 const int MENU_WIDTH(30);
 const int MENU_HEIGHT(10);
 
 // forward declaration
 WINDOW* init_window();
-void init_menu_window(WINDOW *win);
-void init_maze_window(WINDOW *win);
+void init_menu_window(WINDOW *win, int win_y, int win_x);
+void init_maze_window(WINDOW *win, int& win_y, int& win_x);
 
 
 /**
  *   NCURSES initializer at program start
  */
 WINDOW* init_window() {
+    int win_x, win_y;
+
     // init NCURSES GUI
     initscr();
     clear();
@@ -34,19 +34,22 @@ WINDOW* init_window() {
     init_pair(5, COLOR_RED, COLOR_RED);        // torch far on hard, path on medium
     init_pair(6, COLOR_YELLOW, COLOR_BLACK);   // player on easy
 
-    return newwin(WINDOW_HEIGHT, WINDOW_WIDTH, 0, 0);
+    getmaxyx(stdscr, win_y, win_x);
+    return newwin(win_y, win_x, 0, 0);
 }
 
 
 /**
  *   NCURSES initializer for a menu
  */
-void init_menu_window(WINDOW *win) {
-    int startx(0);
-    int starty(0);
+void init_menu_window(WINDOW *win, int win_y, int win_x) {
+    int height(MENU_HEIGHT > win_y ? MENU_HEIGHT : win_y);
+    int width(MENU_WIDTH > win_x ? MENU_WIDTH : win_x);
 
-    startx = (WINDOW_WIDTH - MENU_WIDTH) / 2;
-    starty = (WINDOW_HEIGHT - MENU_HEIGHT) / 4;
+    int starty(0);
+    int startx(0);
+    starty = (height - MENU_HEIGHT) / 2;
+    startx = (width - MENU_WIDTH) / 2;
 
     *win = *newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
     keypad(win, TRUE);
@@ -59,6 +62,11 @@ void init_menu_window(WINDOW *win) {
  *   NCURSES initializer for the actual mazes
  */
 void init_maze_window(WINDOW *win) {
-    *win = *newwin(WINDOW_HEIGHT, WINDOW_WIDTH, 0, 0);
-    box(win, 0, 0);
+    int win_y, win_x;
+    getmaxyx(stdscr, win_y, win_x);
+    *win = *newwin(win_y, win_x, 0, 0);
+    keypad(win, TRUE);
+    clear();
+    //box(win, 0, 0);
+    //wrefresh(win);
 }
