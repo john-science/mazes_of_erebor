@@ -58,7 +58,7 @@ game_state diff_menu(WINDOW *win)
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
                 init_menu_window(win, win_y, win_x);
-                mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");
+                mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");  // TODO: Move to print menu method?
                 refresh();
                 break;
             // no default actions to be taken
@@ -90,7 +90,7 @@ game_state main_menu(WINDOW *win)
 
     getmaxyx(stdscr, win_y, win_x);
     init_menu_window(win, win_y, win_x);
-    mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");
+    mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");  // TODO: Move to print menu method?
     refresh();
 
     print_menu(win, highlight, choices, n_choices);

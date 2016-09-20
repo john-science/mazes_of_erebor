@@ -2,23 +2,26 @@
 #include <random>
 #include <ncurses.h>
 #include <string.h>
+#include <vector>
 #include "maze.h"
 #include "menu.h"
 #include "windows.h"
 
+using namespace std;
 
 // forward declarations
-void success_splash(int count);
 void get_new_dims(int& nrows, int& ncols, int count);
 game_state game_ui(WINDOW *menu_win, game_state state);
 game_state game_ui_medium(WINDOW *menu_win);
+void success_splash(WINDOW *win, int count);
+void content_screen(WINDOW *win, string txt);
 
 // constants for splash screen
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
 const char* splash_success[] = {"You did it!",
                                 "You solved it!",
-                                "You solved the maze!",
+                                "You solved the maze!",  // TODO: You solved the maze!y out!. Press Ente
                                 "You found a way out!",
                                 "You are through the maze!",
                                 "You found your way through the maze!",
@@ -26,17 +29,19 @@ const char* splash_success[] = {"You did it!",
                                 "You found the end of the laybrinth!",};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
-const char* splash_story[] = {"You kick over a dusty old pile of Orcish remains that\n block the staircase.",
+const char* splash_story[] = {"You delve deeper.",
+                              "You kick over a dusty old pile of Orcish remains that block the staircase.",  // TODO: extra space at beginning of 2nd line
                               "You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
                               "You find a staircase leading down and follow it.",
-                              "You delve deeper.",
                               "Deeper and deeper into the Halls of the Mountain King...",
+                              "Your torch flickers in a draft as you head down the stairs.",
+                              "You hear the echoes of war drums far off in the distance.",
                               "You find a curving ramp leading further down into the mountain.",
                               "You find a narrow staircase leading down into the mountain.",
                               "How deep under the mountain does these tunnels go?",
-                              "Above the stone doorway you find an engraved\n scene of a human archer killing a dragon.",
-                              "Engraved along the walls of the spiral staircase\n are scenes of a dwarf being buried with a glowing gem."};
+                              "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
+                              "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
 const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 
 
@@ -49,39 +54,36 @@ game_state game_ui(WINDOW *win, game_state state)
 {
     maze_data maze;
     int player[2] = {1, 1};
-    int finish[2] = {1, 1};
     int count(0);
     int c;
     int win_y(15);
     int win_x(15);
     int last_win_y, last_win_x;
-    //init_maze_window(win);
-    mvwin(win, 0, 0);
+
+    // init window at current resolution
+    // TODO: Placeholder for intro text
+    content_screen(win, "Placeholder for Intro Text. Press Enter to Continue...");
+    init_maze_window(win);
     getmaxyx(stdscr, win_y, win_x);
-    wresize(win, win_y, win_x);
-    wclear(win);
-    box(win, 0, 0);
     last_win_y = win_y;
     last_win_x = win_x;
 
     // generate a new maze
-    mvprintw(3, 1, "beep 1");
     backtracking_maze_gen(&maze);
-    mvprintw(4, 1, "beep 2");
-    gen_entrances_opposites(&maze, player, finish);
-    mvprintw(5, 1, "beep 3");
+    gen_entrances_opposites(&maze);
+    player[0] = maze.start[0];
+    player[1] = maze.start[1];
 
     while (true) {
         if (state == game_easy) {
-            maze_print_easy(win, maze, player, finish);
+            maze_print_easy(win, maze, player);
         } else if (state == game_hard) {
-            maze_print_hard(win, maze, player, finish);
+            maze_print_hard(win, maze, player);
         }
 
         // input and update
         // TODO: Am I wasting a LOT of cycles here?
         c = wgetch(win);
-        //c = getch();
         switch (c) {
             case KEY_UP:
                 if (maze_valid_move(maze, player[0] - 1, player[1])) {
@@ -119,8 +121,8 @@ game_state game_ui(WINDOW *win, game_state state)
         }
 
         // If you reach the end, start over in a new maze
-        if (player[0] == finish[0] && player[1] == finish[1]) {
-            success_splash(count + 2);
+        if (player[0] == maze.finish[0] && player[1] == maze.finish[1]) {
+            success_splash(win, count + 2);
             wclear(win);
             box(win, 0, 0);
             wrefresh(win);
@@ -128,7 +130,9 @@ game_state game_ui(WINDOW *win, game_state state)
 
             // generate a new maze
             backtracking_maze_gen(&maze);
-            gen_entrances_opposites(&maze, player, finish);
+            gen_entrances_opposites(&maze);
+            player[0] = maze.start[0];
+            player[1] = maze.start[1];
 
             count += 1;
         }
@@ -146,34 +150,33 @@ game_state game_ui_medium(WINDOW *win)
     maze_data maze;
     bool visited[maze.max_size * maze.max_size / 2];
     int player[2] = {1, 1};
-    int finish[2] = {1, 1};
     int count(0);
     int c;
     int win_y(15);
     int win_x(15);
     int last_win_y, last_win_x;
 
+    // init window at current resolution
+    content_screen(win, "Placeholder for Intro Text. Press Enter to Continue...");
     init_maze_window(win);
-    //mvwin(win, 0, 0);
     getmaxyx(stdscr, win_y, win_x);
-    //wresize(win, win_y, win_x);
-    //wclear(win);
-    //box(win, 0, 0);
     last_win_y = win_y;
     last_win_x = win_x;
 
     // generate a new maze
     std::fill_n(visited, maze.max_size * maze.max_size / 2, false);
     backtracking_maze_gen(&maze);
-    gen_entrances_opposites(&maze, player, finish);
+    gen_entrances_opposites(&maze);
+    player[0] = maze.start[0];
+    player[1] = maze.start[1];
 
     while (true) {
         visited[player[0] * maze.max_size + player[1]] = true;
-        visited[finish[0] * maze.max_size + finish[1]] = true;
-        maze_print_medium(win, maze, visited, player, finish);
+        visited[maze.finish[0] * maze.max_size + maze.finish[1]] = true;
+        maze_print_medium(win, maze, visited, player);
 
         // input and update
-        c = getch();
+        c = wgetch(win);
         switch (c) {
             case KEY_UP:
                 if (maze_valid_move(maze, player[0] - 1, player[1])) {
@@ -210,9 +213,9 @@ game_state game_ui_medium(WINDOW *win)
             // no default actions to be taken
         }
 
-        // If you reach the end, start over in a new maze
-        if (player[0] == finish[0] && player[1] == finish[1]) {
-            success_splash(count + 2);
+        // if you reach the end, start over in a new maze
+        if (player[0] == maze.finish[0] && player[1] == maze.finish[1]) {
+            success_splash(win, count + 2);
             wclear(win);
             box(win, 0, 0);
             wrefresh(win);
@@ -221,7 +224,9 @@ game_state game_ui_medium(WINDOW *win)
             // generate a new maze
             std::fill_n(visited, maze.max_size * maze.max_size / 2, false);
             backtracking_maze_gen(&maze);
-            gen_entrances_opposites(&maze, player, finish);
+            gen_entrances_opposites(&maze);
+            player[0] = maze.start[0];
+            player[1] = maze.start[1];
 
             count += 1;
         }
@@ -245,21 +250,95 @@ void get_new_dims(int& nrows, int& ncols, int count) {
 }
 
 
-// TODO: Put in a box, and handle longer sentences (split on spaces?).
 /**
- *  A quick splash screen to congratulate the player on finishing the maze.
- *  NOTE: This is partially just a place-holder for a better splash screen.
+ *    Format potentially long text for print-out.
  */
-void success_splash(int count) {
-    clear();
+vector<string> format_text(const string txt, unsigned int num_cols) {
+    vector<string> lines;
+    unsigned int i(0);
+    unsigned int last_space(0);
+    unsigned int last_end(0);
 
-    mvprintw(1, 1, (std::string(splash_exclaim[rand() % n_splash_exclaim]) +
-                    std::string(splash_success[rand() % n_splash_success])).c_str());
-    mvprintw(3, 1, splash_story[rand() % n_splash_story]);
-    mvprintw(7, 1, (std::string("You are ") +
-                    std::to_string(count) +
-                    std::string(" levels under Erebor.")).c_str());
+    // if the line is short, skip all this work
+    if (txt.length() < num_cols) {
+        lines.push_back(txt.substr(0));
+        return lines;
+    }
 
-    refresh();
+    // loop through each character
+    while (i < txt.length()) {
+        // note the spaces, for clean line breaks
+        if (txt.at(i) == ' '){
+            last_space = i;
+        }
+
+        // break on EOL and when you are past the column count
+        if (txt.at(i) == '\n') {
+            lines.push_back(txt.substr(last_end, i - last_end));
+            last_end = i + 1;
+        } else if ((i - last_end) > num_cols) {
+            if (last_end >= last_space) {
+                lines.push_back(txt.substr(last_end, num_cols));
+                last_end += num_cols;
+            } else {
+                lines.push_back(txt.substr(last_end, last_space - last_end));
+                last_end = last_space + 1;
+            }
+        }
+        i += 1;
+    }
+
+    // add last part of string
+    lines.push_back(txt.substr(last_end));
+    return lines;
+}
+
+
+/**
+ *    Splash screen, after you finish a maze
+ */
+void success_splash(WINDOW *win, int count) {
+    string txt(string(splash_exclaim[rand() % n_splash_exclaim]) +
+               string(splash_success[rand() % n_splash_success]) + "\n\n" +
+               splash_story[rand() % n_splash_story] + "\n\n\n" +
+               string("You are now ") + to_string(count) + string(" levels under Erebor."));
+
+    content_screen(win, txt);
+}
+
+
+/**
+ *    Default function to display text content
+ */
+void content_screen(WINDOW *win, string txt) {
+    int win_y(15);
+    int win_x(15);
+    mvwin(win, 0, 0);
+    getmaxyx(stdscr, win_y, win_x);
+    wresize(win, win_y, win_x);
+    wclear(win);
+    box(win, 0, 0);
+
+    if (win_y < 6 || win_x < 10) {return;}
+
+    unsigned int num_rows(win_y - 2);
+    int num_cols(win_x - 2);
+
+    vector<string> lines(format_text(txt, num_cols));
+    unsigned int row(1);
+
+    for (int i=0; i < (int)lines.size(); ++i) {
+        mvprintw(row, 2, lines[i].c_str());  // TODO: Should probably be a vector of const char*
+        row += 1;
+        if (row == num_rows) {
+            row = 0;
+            wrefresh(win);
+            getch();
+            wclear(win);
+            box(win, 0, 0);
+        }
+    }
+
+    wrefresh(win);
     getch();
 }

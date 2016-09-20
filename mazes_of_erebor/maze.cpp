@@ -8,13 +8,17 @@
 
 using namespace std;
 
+
 const int MAX_MAZE_SIZE(71);
+
 
 struct maze_data {
     bool grid[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
-    int nrows = 19;
-    int ncols = 31;
+    int nrows = 19 < MAX_MAZE_SIZE ? 19 : MAX_MAZE_SIZE;
+    int ncols = 31 < MAX_MAZE_SIZE ? 31 : MAX_MAZE_SIZE;
     int max_size = MAX_MAZE_SIZE;
+    int start[2] = {1, 1};
+    int finish[2] = {1, 1};
 };
 
 
@@ -128,41 +132,41 @@ void backtracking_maze_gen(maze_data *maze)
 /**
     Generate random maze start/finish positions.
 */
-void gen_entrances_opposites(maze_data *maze, int start[], int finish[])
+void gen_entrances_opposites(maze_data *maze)
 {
     int wall;
     wall = rand() % 4;
 
     if (wall / 2 == 0) {
         // East-West walls
-        start[0] = (rand() % ((maze->nrows - 1) / 2)) * 2 + 1;
-        finish[0] = (rand() % ((maze->nrows - 1) / 2)) * 2 + 1;
+        maze->start[0] = (rand() % ((maze->nrows - 1) / 2)) * 2 + 1;
+        maze->finish[0] = (rand() % ((maze->nrows - 1) / 2)) * 2 + 1;
         if (wall % 2 == 0) {
             // Start on West wall
-            start[1] = 0;
-            finish[1] = maze->ncols - 1;
+            maze->start[1] = 0;
+            maze->finish[1] = maze->ncols - 1;
         } else {
             // Start on East Wall
-            start[1] = maze->ncols - 1;
-            finish[1] = 0;
+            maze->start[1] = maze->ncols - 1;
+            maze->finish[1] = 0;
         }
     } else {
         // North-South walls
-        start[1] = (rand() % ((maze->ncols - 1) / 2)) * 2 + 1;
-        finish[1] = (rand() % ((maze->ncols - 1) / 2)) * 2 + 1;
+        maze->start[1] = (rand() % ((maze->ncols - 1) / 2)) * 2 + 1;
+        maze->finish[1] = (rand() % ((maze->ncols - 1) / 2)) * 2 + 1;
         if (wall % 2 == 0) {
             // Start on North wall
-            start[0] = 0;
-            finish[0] = maze->nrows - 1;
+            maze->start[0] = 0;
+            maze->finish[0] = maze->nrows - 1;
         } else {
             // Start on South Wall
-            start[0] = maze->nrows - 1;
-            finish[0] = 0;
+            maze->start[0] = maze->nrows - 1;
+            maze->finish[0] = 0;
         }
     }
 
-    maze->grid[start[0] * maze->max_size + start[1]] = false;
-    maze->grid[finish[0] * maze->max_size + finish[1]] = false;
+    maze->grid[maze->start[0] * maze->max_size + maze->start[1]] = false;
+    maze->grid[maze->finish[0] * maze->max_size + maze->finish[1]] = false;
 }
 
 
@@ -172,7 +176,7 @@ void gen_entrances_opposites(maze_data *maze, int start[], int finish[])
  *   This prints from a God's Eye perspective,
  *   where the entire maze is visible.
  */
-void maze_print_easy(WINDOW *win, const maze_data maze, int player[], int finish[])
+void maze_print_easy(WINDOW *win, const maze_data maze, const int player[])
 {
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
@@ -194,7 +198,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, int player[], int finish
             if (player[0] == r && player[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "@");  // player
-            } else if (finish[0] == r && finish[1] == c) {
+            } else if (maze.finish[0] == r && maze.finish[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "X");  // finish
             } else if (!maze.grid[c + r * maze.max_size]) {
@@ -217,7 +221,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, int player[], int finish
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], int player[], int finish[])
+void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], const int player[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -283,7 +287,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
         r -= 1;
     }
     grid[player[0] * maze.max_size + player[1]] = player_posi;
-    grid[finish[0] * maze.max_size + finish[1]] = finish_posi;
+    grid[maze.finish[0] * maze.max_size + maze.finish[1]] = finish_posi;
 
     // offsets for printing
     int c_off(1 + (win_x - 2 - maze.ncols) / 2);
@@ -325,7 +329,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_hard(WINDOW *win, const maze_data maze, int player[], int finish[])
+void maze_print_hard(WINDOW *win, const maze_data maze, const int player[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -405,7 +409,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, int player[], int finish
                 mvwprintw(win, r + r_off, c + c_off, " ");  // wall
                 wattroff(win, COLOR_PAIR(1));  // necessary to fix game window box color
             } else if (cell == open_hall) {
-                if (r == finish[0] && c == finish[1]) {
+                if (r == maze.finish[0] && c == maze.finish[1]) {
                     wattron(win, COLOR_PAIR(2));
                     mvwprintw(win, r + r_off, c + c_off, "X");  // finish
                 } else {
