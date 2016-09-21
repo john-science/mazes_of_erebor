@@ -43,6 +43,15 @@ const char* splash_story[] = {"You delve deeper.",
                               "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
                               "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
 const int n_splash_story = sizeof(splash_story) / sizeof(char *);
+const char* intro = "You are a young dwarf in the late fourth age of this world.\n\n"
+                    "The number of dwarves in the world has dwindles and foul creatures have "
+                    "taken over your home Erebor, the Lonely Mountain. You are too late to "
+                    "save your people, but deep under the mountain, in the labyrnths and "
+                    "catacombs a weapon is buried that is said can destroy the "
+                    "Lonely Mountain.\n\nThe last thing you want is to destroy your homeland, "
+                    "but the hoards in the mountain grow strong and you can't let them "
+                    "survive to attack Middle Earth.\n\nSo you head into the catacombs with "
+                    "no thought over ever getting out.";  // TODO: "weapon is" overruns a line
 
 
 /**
@@ -61,8 +70,7 @@ game_state game_ui(WINDOW *win, game_state state)
     int last_win_y, last_win_x;
 
     // init window at current resolution
-    // TODO: Placeholder for intro text
-    content_screen(win, "Placeholder for Intro Text. Press Enter to Continue...");
+    content_screen(win, intro);
     init_maze_window(win);
     getmaxyx(stdscr, win_y, win_x);
     last_win_y = win_y;
@@ -161,7 +169,7 @@ game_state game_ui_medium(WINDOW *win)
     int last_win_y, last_win_x;
 
     // init window at current resolution
-    content_screen(win, "Placeholder for Intro Text. Press Enter to Continue...");
+    content_screen(win, intro);
     init_maze_window(win);
     getmaxyx(stdscr, win_y, win_x);
     last_win_y = win_y;
@@ -284,7 +292,7 @@ vector<string> format_text(const string txt, unsigned int num_cols) {
         if (txt.at(i) == '\n') {
             lines.push_back(txt.substr(last_end, i - last_end));
             last_end = i + 1;
-        } else if ((i - last_end) > num_cols) {
+        } else if ((i - last_end) == num_cols) {
             if (last_end >= last_space) {
                 lines.push_back(txt.substr(last_end, num_cols));
                 last_end += num_cols;
@@ -327,10 +335,10 @@ void content_screen(WINDOW *win, string txt) {
     wclear(win);
     box(win, 0, 0);
 
-    if (win_y < 6 || win_x < 10) {return;}
+    if (win_y < 6 || win_x < 12) {return;}
 
     unsigned int num_rows(win_y - 2);
-    int num_cols(win_x - 2);
+    int num_cols(win_x - 4);
 
     vector<string> lines(format_text(txt, num_cols));
     unsigned int row(1);
