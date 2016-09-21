@@ -21,7 +21,7 @@ const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
 const char* splash_success[] = {"You did it!",
                                 "You solved it!",
-                                "You solved the maze!",  // TODO: You solved the maze!y out!. Press Ente
+                                "You solved the maze!",
                                 "You found a way out!",
                                 "You are through the maze!",
                                 "You found your way through the maze!",
@@ -30,7 +30,7 @@ const char* splash_success[] = {"You did it!",
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
 const char* splash_story[] = {"You delve deeper.",
-                              "You kick over a dusty old pile of Orcish remains that block the staircase.",  // TODO: extra space at beginning of 2nd line
+                              "You kick over a dusty old pile of Orcish remains that block the staircase.",
                               "You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
                               "You find a staircase leading down and follow it.",
@@ -115,6 +115,8 @@ game_state game_ui(WINDOW *win, game_state state)
                     wresize(win, win_y, win_x);
                     wclear(win);
                     box(win, 0, 0);
+                    refresh();
+                    wrefresh(win);
                 }
                 break;
             // no default actions to be taken
@@ -124,7 +126,9 @@ game_state game_ui(WINDOW *win, game_state state)
         if (player[0] == maze.finish[0] && player[1] == maze.finish[1]) {
             success_splash(win, count + 2);
             wclear(win);
+            clear();
             box(win, 0, 0);
+            refresh();
             wrefresh(win);
             get_new_dims(maze.nrows, maze.ncols, count);
 
@@ -208,6 +212,8 @@ game_state game_ui_medium(WINDOW *win)
                     wresize(win, win_y, win_x);
                     wclear(win);
                     box(win, 0, 0);
+                    refresh();
+                    wrefresh(win);
                 }
                 break;
             // no default actions to be taken
@@ -217,7 +223,9 @@ game_state game_ui_medium(WINDOW *win)
         if (player[0] == maze.finish[0] && player[1] == maze.finish[1]) {
             success_splash(win, count + 2);
             wclear(win);
+            clear();
             box(win, 0, 0);
+            refresh();
             wrefresh(win);
             get_new_dims(maze.nrows, maze.ncols, count);
 
