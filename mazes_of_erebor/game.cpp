@@ -1,6 +1,7 @@
 
 #include <random>
 #include <ncurses.h>
+#include <random>
 #include <string.h>
 #include <vector>
 #include "maze.h"
@@ -10,11 +11,12 @@
 using namespace std;
 
 // forward declarations
-void get_new_dims(int& nrows, int& ncols, int count);
 game_state game_ui(WINDOW *menu_win, game_state state);
 game_state game_ui_medium(WINDOW *menu_win);
-void success_splash(WINDOW *win, int count);
+void get_new_dims(int& nrows, int& ncols, int count);
+void success_splash(WINDOW *win, const int count);
 void content_screen(WINDOW *win, string txt);
+const char* skewed_choice(const char* arr[], const int length, const int exp=2);
 
 // constants for splash screen
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
@@ -25,8 +27,8 @@ const char* splash_success[] = {"You did it!",
                                 "You found a way out!",
                                 "You are through the maze!",
                                 "You found your way through the maze!",
-                                "You are through!"
-                                "You found the end of the laybrinth!",};
+                                "You are through!",
+                                "You found the end of the laybrinth!"};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
 const char* splash_story[] = {"You delve deeper.",
@@ -73,7 +75,7 @@ const char* intro = "You are a young dwarf in the late fourth age of this world.
                     "you are half human, and cannot let the world fall without defending it.\n\n"
                     "You set off quietly months ago and started mining out the hidden entrance "
                     "your father left to the undermines. Sealing yourself in as you go. Today "
-                    "you break through and enter the catacombs for the first and last time."
+                    "you break through and enter the catacombs for the first and last time.";
 
 
 /**
@@ -333,12 +335,23 @@ vector<string> format_text(const string txt, unsigned int num_cols) {
 
 
 /**
+ *    Randomly select an element from a text array,
+ *    skewing the results toward the first elements.
+ *    Use the "exp" parameter to control how strong the skewing is.
+ */
+const char* skewed_choice(const char* arr[], const int length, const int exp) {
+    float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    return arr[(int)(length * pow(r, exp))];
+}
+
+
+/**
  *    Splash screen, after you finish a maze
  */
-void success_splash(WINDOW *win, int count) {
-    string txt(string(splash_exclaim[rand() % n_splash_exclaim]) +
-               string(splash_success[rand() % n_splash_success]) + "\n\n" +
-               splash_story[rand() % n_splash_story] + "\n\n\n" +
+void success_splash(WINDOW *win, const int count) {
+    string txt(string(skewed_choice(splash_exclaim, n_splash_exclaim)) +
+               string(skewed_choice(splash_success, n_splash_success)) + "\n\n" +
+               string(skewed_choice(splash_story, n_splash_story)) + "\n\n\n" +
                string("You are now ") + to_string(count) + string(" levels under Erebor."));
 
     content_screen(win, txt);
@@ -369,7 +382,7 @@ void content_screen(WINDOW *win, string txt) {
         mvprintw(row, 2, lines[i].c_str());  // TODO: Should probably be a vector of const char*
         row += 1;
         if (row == num_rows) {
-            row = 0;
+            row = 1;
             wrefresh(win);
             getch();
             wclear(win);
