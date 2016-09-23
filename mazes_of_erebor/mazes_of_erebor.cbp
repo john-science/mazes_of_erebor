@@ -40,6 +40,8 @@
 		<Unit filename="maze.h" />
 		<Unit filename="menu.cpp" />
 		<Unit filename="menu.h" />
+		<Unit filename="story.cpp" />
+		<Unit filename="story.h" />
 		<Unit filename="windows.cpp" />
 		<Unit filename="windows.h" />
 		<Extensions>

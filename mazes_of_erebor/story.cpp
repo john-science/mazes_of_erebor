@@ -14,8 +14,10 @@ const char* skewed_choice(const char* arr[], const int length, const int exp=3);
 void success_splash(WINDOW *win, const int count);
 
 // constants for splash screen
+//const char* splash_exclaim[] = {""};  // Testing content screen bug
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
+//const char* splash_success[] = {"You did it!"};  // Testing content screen bug
 const char* splash_success[] = {"You did it!",
                                 "You solved it!",
                                 "You solved the maze!",
@@ -26,6 +28,7 @@ const char* splash_success[] = {"You did it!",
                                 "You found the end of the laybrinth!"};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
+//const char* splash_story[] = {"You delve deeper."};  // Testing content screen bug
 const char* splash_story[] = {"You delve deeper.",
                               "You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
@@ -118,11 +121,7 @@ vector<string> format_text(const string txt, unsigned int num_cols) {
 
         // break on EOL and when you are past the column count
         if (txt[i] == '\n') {
-            if ((i - last_end) <= 0) {
-                lines.push_back("");
-            } else {
-                lines.push_back(txt.substr(last_end, i - last_end));
-            }
+            lines.push_back(txt.substr(last_end, i - last_end));
             last_end = i + 1;
         } else if ((i - last_end) == num_cols) {
             if (last_end >= last_space) {
