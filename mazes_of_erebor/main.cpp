@@ -23,9 +23,7 @@ int main()
             state = main_menu(win);
         } else if (state == menu_diff) {
             state = diff_menu(win);
-        } else if (state == game_medium) {
-            state = game_ui_medium(win);
-        } else if (state == game_easy || state == game_hard){
+        } else if (state == game_easy || state == game_hard || state == game_medium){
             state = game_ui(win, state);
         } else {
             state = quit;

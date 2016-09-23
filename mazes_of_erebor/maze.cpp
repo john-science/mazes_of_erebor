@@ -14,6 +14,7 @@ const int MAX_MAZE_SIZE(71);
 
 struct maze_data {
     bool grid[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
+    int level = -1;
     int nrows = 19 < MAX_MAZE_SIZE ? 19 : MAX_MAZE_SIZE;
     int ncols = 31 < MAX_MAZE_SIZE ? 31 : MAX_MAZE_SIZE;
     int max_size = MAX_MAZE_SIZE;
