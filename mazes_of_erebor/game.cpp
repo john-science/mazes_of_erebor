@@ -10,6 +10,20 @@
 
 using namespace std;
 
+
+struct player_data {
+    int position[2] = {1, 1};
+    string nomen = "Khorin";
+    string parent1 = "Balin";  // dwarf
+    string parent2 = "Rogyr";  // human
+    bool visited[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
+};
+
+struct game_data {
+    maze_data maze;
+    player_data player;
+};
+
 // forward declarations
 game_state game_ui(WINDOW *menu_win, game_state state);
 game_state game_ui_medium(WINDOW *menu_win);

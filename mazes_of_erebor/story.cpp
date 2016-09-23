@@ -17,17 +17,17 @@ void success_splash(WINDOW *win, const int count);
 const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
 const char* splash_success[] = {"You did it!",
-                                "You solved it!",
-                                "You solved the maze!",
-                                "You found a way out!",
-                                "You are through the maze!",
-                                "You found your way through the maze!",
-                                "You are through!",
+                                //"You solved it!",
+                                //"You solved the maze!",
+                                //"You found a way out!",
+                                //"You are through the maze!",
+                                //"You found your way through the maze!",
+                                //"You are through!",
                                 "You found the end of the laybrinth!"};
 const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
 const char* splash_story[] = {"You delve deeper.",
-                              "You take a short rest before taking the staircase down.",
+                              /**"You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
                               "You find a staircase leading down and follow it.",
                               "You kick over a dusty old pile of Orcish remains that block the staircase.",
@@ -37,7 +37,7 @@ const char* splash_story[] = {"You delve deeper.",
                               "You find a curving ramp leading further down into the mountain.",
                               "You find a narrow staircase leading down into the mountain.",
                               "How deep under the mountain do these tunnels go?",
-                              "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
+                              "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",*/
                               "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
 const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 const char* intro = "You are Khorin, son of Balin and Rogyr, and you can feel that the fourth "
@@ -105,20 +105,25 @@ vector<string> format_text(const string txt, unsigned int num_cols) {
 
     // if the line is short, skip all this work
     if (txt.length() < num_cols) {
-        lines.push_back(txt.substr(0));
+        //lines.push_back(txt.substr(0));
+        lines.push_back(txt);
         return lines;
     }
 
     // loop through each character
     while (i < txt.length()) {
         // note the spaces, for clean line breaks
-        if (txt.at(i) == ' '){
+        if (txt[i] == ' '){
             last_space = i;
         }
 
         // break on EOL and when you are past the column count
-        if (txt.at(i) == '\n') {
-            lines.push_back(txt.substr(last_end, i - last_end));
+        if (txt[i] == '\n') {
+            if ((i - last_end) <= 0) {
+                lines.push_back("");
+            } else {
+                lines.push_back(txt.substr(last_end, i - last_end));
+            }
             last_end = i + 1;
         } else if ((i - last_end) == num_cols) {
             if (last_end >= last_space) {

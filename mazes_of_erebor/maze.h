@@ -4,7 +4,6 @@
 
 const int MAX_MAZE_SIZE(71);
 
-// TODO: Add start and finish to maze_data?
 struct maze_data {
     bool grid[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
     int nrows = 19;
