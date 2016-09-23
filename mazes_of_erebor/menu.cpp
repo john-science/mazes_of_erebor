@@ -9,20 +9,20 @@ int n_choices_cont = sizeof(choices_cont) / sizeof(char *);
 */
 
 
-enum game_state {menu_main, menu_diff,
-                 game_easy, game_medium, game_hard, game_intro, game_splash,
-                 quit};
+enum menu_state {menu_main, menu_diff,
+                 game_easy, game_medium, game_hard,
+                 too_small, quit};
 
 
 void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
-game_state main_menu(WINDOW *win);
-game_state diff_menu(WINDOW *win);
+menu_state main_menu(WINDOW *win);
+menu_state diff_menu(WINDOW *win);
 
 
 /**
  *  Menu for: Game Difficulty selection
  */
-game_state diff_menu(WINDOW *win)
+menu_state diff_menu(WINDOW *win)
 {
     char const *choices[] = {"Easy", "Medium", "Hard",};
     int n_choices = sizeof(choices) / sizeof(char *);
@@ -80,7 +80,7 @@ game_state diff_menu(WINDOW *win)
 /**
  *  Menu: Default main menu
  */
-game_state main_menu(WINDOW *win)
+menu_state main_menu(WINDOW *win)
 {
     char const *choices[] = {"Start New", "Quit",};
     int n_choices = sizeof(choices) / sizeof(char *);

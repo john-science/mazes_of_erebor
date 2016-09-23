@@ -11,6 +11,7 @@
 using namespace std;
 
 
+// TODO: Use these data in the intro story
 struct player_data {
     int loc[2] = {1, 1};
     string name = "Khorin";
@@ -25,7 +26,7 @@ struct game_data {
 };
 
 // forward declarations
-game_state game_ui(WINDOW *menu_win, game_state state);
+menu_state game_ui(WINDOW *menu_win, menu_state state);
 void get_new_dims(int& nrows, int& ncols, int level);
 
 
@@ -34,7 +35,7 @@ void get_new_dims(int& nrows, int& ncols, int level);
  *
  *   Use arrow keys to navigate the maze or type "q" to quit.
  */
-game_state game_ui(WINDOW *win, game_state state)
+menu_state game_ui(WINDOW *win, menu_state state)
 {
     maze_data maze;
     player_data player;
@@ -50,15 +51,18 @@ game_state game_ui(WINDOW *win, game_state state)
     last_win_y = win_y;
     last_win_x = win_x;
 
-    // generate a new maze
-    std::fill_n(player.visited, maze.max_size * maze.max_size / 2, false);
-    backtracking_maze_gen(&maze);
-    gen_entrances_opposites(&maze);
-    player.loc[0] = maze.start[0];
-    player.loc[1] = maze.start[1];
-    player.visited[maze.finish[0] * maze.max_size + maze.finish[1]] = true;
-    maze.level = 0;
+    // generate a new maze, if necessary
+    if (maze.level == -1) {
+        backtracking_maze_gen(&maze);
+        gen_entrances_opposites(&maze);
+        std::fill_n(player.visited, maze.max_size * maze.max_size / 2, false);
+        player.visited[maze.finish[0] * maze.max_size + maze.finish[1]] = true;
+        player.loc[0] = maze.start[0];
+        player.loc[1] = maze.start[1];
+        maze.level = 0;
+    }
 
+    // game loop
     while (true) {
         player.visited[player.loc[0] * maze.max_size + player.loc[1]] = true;
 

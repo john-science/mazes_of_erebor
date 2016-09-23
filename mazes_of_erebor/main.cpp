@@ -15,7 +15,7 @@ int main()
     srand(time(0));
 
     // master FSM state
-    game_state state = menu_main;
+    menu_state state = menu_main;
 
     // worlds simplest state machine
     while (state != quit) {
