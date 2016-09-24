@@ -37,8 +37,9 @@ void get_new_dims(int& nrows, int& ncols, int level);
  */
 menu_state game_ui(WINDOW *win, menu_state state)
 {
-    maze_data maze;
-    player_data player;
+    game_data g;
+    maze_data maze = g.maze;
+    player_data player = g.player;
     int c;
     int win_y(15);
     int win_x(15);

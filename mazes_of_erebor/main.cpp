@@ -14,7 +14,7 @@ int main()
     WINDOW *win = init_window();
     srand(time(0));
 
-    // master FSM state
+    // FSM state
     menu_state state = menu_main;
 
     // worlds simplest state machine
