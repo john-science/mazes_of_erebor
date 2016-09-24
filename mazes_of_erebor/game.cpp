@@ -1,4 +1,5 @@
 
+#include <functional>
 #include <random>
 #include <ncurses.h>
 #include <string.h>
@@ -26,7 +27,7 @@ struct game_data {
 };
 
 // forward declarations
-menu_state game_ui(WINDOW *menu_win, menu_state state);
+menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
 void get_new_dims(int& nrows, int& ncols, int level);
 
 
@@ -35,11 +36,10 @@ void get_new_dims(int& nrows, int& ncols, int level);
  *
  *   Use arrow keys to navigate the maze or type "q" to quit.
  */
-menu_state game_ui(WINDOW *win, menu_state state)
+menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
 {
-    game_data g;
-    maze_data maze = g.maze;
-    player_data player = g.player;
+    maze_data maze = d->maze;
+    player_data player = d->player;
     int c;
     int win_y(15);
     int win_x(15);

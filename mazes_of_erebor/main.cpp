@@ -14,6 +14,10 @@ int main()
     WINDOW *win = init_window();
     srand(time(0));
 
+    // create a default game data object
+    game_data data;
+    data.maze.level = -1;
+
     // FSM state
     menu_state state = menu_main;
 
@@ -24,7 +28,7 @@ int main()
         } else if (state == menu_diff) {
             state = diff_menu(win);
         } else if (state == game_easy || state == game_hard || state == game_medium){
-            state = game_ui(win, state);
+            state = game_ui(win, &data, state);
         } else {
             state = quit;
         }

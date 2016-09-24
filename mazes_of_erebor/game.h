@@ -16,7 +16,7 @@ struct game_data {
     player_data player;
 };
 
-menu_state game_ui(WINDOW *menu_win, menu_state state);
+menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
 
 #endif
 
