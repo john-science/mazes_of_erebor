@@ -9,10 +9,9 @@ int n_choices_cont = sizeof(choices_cont) / sizeof(char *);
 */
 
 
-enum menu_state {menu_main, menu_diff,
+enum menu_state {menu_main, menu_diff, menu_cont,
                  game_easy, game_medium, game_hard,
                  too_small, quit};
-
 
 void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
 menu_state main_menu(WINDOW *win);
