@@ -1,8 +1,9 @@
 
 #include <random>
 #include <ncurses.h>
-#include "menu.h"
+#include "data.h"
 #include "game.h"
+#include "menu.h"
 #include "windows.h"
 
 

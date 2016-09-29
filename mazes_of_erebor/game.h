@@ -1,22 +1,10 @@
 
 #ifndef GAME_H
 #define GAME_H
+#include "data.h"
 #include "maze.h"
-
-struct player_data {
-    int position[2] = {1, 1};
-    std::string nomen = "Khorin";
-    std::string parent1 = "Balin";  // dwarf
-    std::string parent2 = "Rogyr";  // human
-    bool visited[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
-};
-
-struct game_data {
-    maze_data maze;
-    player_data player;
-};
+#include "menu.h"
 
 menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
 
 #endif
-

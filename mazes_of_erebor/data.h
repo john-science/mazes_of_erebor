@@ -2,6 +2,9 @@
 #ifndef DATA_H
 #define DATA_H
 
+#include <string>
+
+using namespace std;
 
 const int MAX_MAZE_SIZE(71);
 

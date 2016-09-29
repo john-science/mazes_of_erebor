@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <vector>
+#include "data.h"
 #include "maze.h"
 #include "menu.h"
 #include "story.h"
@@ -11,20 +12,6 @@
 
 using namespace std;
 
-
-// TODO: Use these data in the intro story
-struct player_data {
-    int loc[2] = {1, 1};
-    string name = "Khorin";
-    string parent1 = "Balin";  // dwarf
-    string parent2 = "Rogyr";  // human
-    bool visited[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
-};
-
-struct game_data {
-    maze_data maze;
-    player_data player;
-};
 
 // forward declarations
 menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
