@@ -15,7 +15,7 @@ using namespace std;
 
 // forward declarations
 menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
-void get_new_dims(int& nrows, int& ncols, int level);
+static void get_new_dims(int& nrows, int& ncols, int level);
 
 
 /**
@@ -130,7 +130,7 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
 /**
  *   Randomly generate maze dimensions.
  */
-void get_new_dims(int& nrows, int& ncols, int level) {
+static void get_new_dims(int& nrows, int& ncols, int level) {
     level %= 20;
 
     const int bottom_y = 15;

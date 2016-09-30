@@ -3,7 +3,7 @@
 #include "data.h"
 #include "windows.h"
 
-void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
+static void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
 menu_state main_menu(WINDOW *win);
 menu_state diff_menu(WINDOW *win);
 menu_state cont_menu(WINDOW *win, game_data *data);
@@ -179,7 +179,7 @@ menu_state cont_menu(WINDOW *win, game_data *data)
 /**
  *  Print a simple menu window
  */
-void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices)
+static void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices)
 {
     int i;
     int x(2);
