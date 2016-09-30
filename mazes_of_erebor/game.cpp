@@ -54,18 +54,14 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
         maze->difficulty = state;
     }
 
+    // select the appropriate print function
+    function<void(WINDOW*, const maze_data, const int[], const bool[])> maze_print = \
+        state == game_easy ? maze_print_easy : (state == game_medium ? maze_print_medium : maze_print_hard);
+
     // game loop
     while (true) {
         player->visited[player->loc[0] * maze->max_size + player->loc[1]] = true;
-
-        // TODO: load this from generic template earlier, to save the ifs
-        if (state == game_easy) {
-            maze_print_easy(win, *maze, player->loc);
-        } else if (state == game_medium) {
-            maze_print_medium(win, *maze, player->visited, player->loc);
-        } else if (state == game_hard) {
-            maze_print_hard(win, *maze, player->loc);
-        }
+        maze_print(win, *maze, player->loc, player->visited);
 
         // input and update
         c = wgetch(win);
@@ -107,7 +103,7 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
             // no default actions to be taken
         }
 
-        // TODO: How to check for value equality in arrays?
+        // TODO: How to better check for value equality in arrays?
         // If you reach the end, start over in a new maze
         if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
             success_splash(win, maze->level + 2);

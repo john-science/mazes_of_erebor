@@ -164,7 +164,7 @@ void gen_entrances_opposites(maze_data *maze)
  *   This prints from a God's Eye perspective,
  *   where the entire maze is visible.
  */
-void maze_print_easy(WINDOW *win, const maze_data maze, const int player[])
+void maze_print_easy(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
 {
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
@@ -209,7 +209,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const int player[])
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], const int player[])
+void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -310,14 +310,13 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const bool visited[], 
 }
 
 
-// TODO: Label the Start and Finish with X or something, so the player knows where the goal is.
 /**
  *   Print a maze, including player/finish positions.
  *   This prints the maze from a static top-down position,
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_hard(WINDOW *win, const maze_data maze, const int player[])
+void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
