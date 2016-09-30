@@ -103,7 +103,6 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
             // no default actions to be taken
         }
 
-        // TODO: How to better check for value equality in arrays?
         // If you reach the end, start over in a new maze
         if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
             success_splash(win, maze->level + 2);
