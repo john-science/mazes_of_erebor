@@ -39,3 +39,12 @@ struct game_data {
 };
 
 
+/**
+ *   Init the maze and player location
+ */
+void reset_player(player_data *player, maze_data *maze) {
+    std::fill_n(player->visited, maze->max_size * maze->max_size / 2, false);
+    player->visited[maze->finish[0] * maze->max_size + maze->finish[1]] = true;
+    player->loc[0] = maze->start[0];
+    player->loc[1] = maze->start[1];
+}

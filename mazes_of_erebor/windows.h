@@ -10,5 +10,7 @@ const int MENU_HEIGHT(10);
 WINDOW* init_window();
 void init_menu_window(WINDOW *win, int win_y, int win_x);
 void init_maze_window(WINDOW *win);
+void full_box_clear(WINDOW *win);
+void full_box_resize(WINDOW *win, int win_y, int win_x);
 
 #endif

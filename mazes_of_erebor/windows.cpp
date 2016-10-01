@@ -9,6 +9,8 @@ const int MENU_HEIGHT(10);
 WINDOW* init_window();
 void init_menu_window(WINDOW *win, int win_y, int win_x);
 void init_maze_window(WINDOW *win, int& win_y, int& win_x);
+void full_box_clear(WINDOW *win);
+void full_box_resize(WINDOW *win, int win_y, int win_x);
 
 
 /**
@@ -68,4 +70,28 @@ void init_maze_window(WINDOW *win) {
     wresize(win, win_y, win_x);
     wclear(win);
     box(win, 0, 0);
+}
+
+
+/**
+ *  Clear the window completely and add a box around it.
+ */
+void full_box_clear(WINDOW *win) {
+    wclear(win);
+    clear();
+    box(win, 0, 0);
+    refresh();
+    wrefresh(win);
+}
+
+
+/**
+ *  Resize the window and add a box around it.
+ */
+void full_box_resize(WINDOW *win, int win_y, int win_x) {
+    wresize(win, win_y, win_x);
+    wclear(win);
+    box(win, 0, 0);
+    refresh();
+    wrefresh(win);
 }

@@ -13,11 +13,6 @@
 using namespace std;
 
 
-// forward declarations
-menu_state game_ui(WINDOW *menu_win, game_data *d, menu_state state);
-static void get_new_dims(int& nrows, int& ncols, int level);
-
-
 /**
  *   The game maze GUI.
  *
@@ -43,14 +38,9 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
 
     // generate a new maze, if necessary
     if (maze->level == -1) {
-        // TODO: Move to data.cpp
-        backtracking_maze_gen(maze);
-        gen_entrances_opposites(maze);
-        std::fill_n(player->visited, maze->max_size * maze->max_size / 2, false);
-        player->visited[maze->finish[0] * maze->max_size + maze->finish[1]] = true;
-        player->loc[0] = maze->start[0];
-        player->loc[1] = maze->start[1];
         maze->level = 0;
+        gen_new_maze(maze);
+        reset_player(player, maze);
         maze->difficulty = state;
     }
 
@@ -93,11 +83,7 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
                 if (last_win_x != win_x || last_win_y != win_y) {
                     last_win_y = win_y;
                     last_win_x = win_x;
-                    wresize(win, win_y, win_x);
-                    wclear(win);
-                    box(win, 0, 0);
-                    refresh();
-                    wrefresh(win);
+                    full_box_resize(win, win_y, win_x);
                 }
                 break;
             // no default actions to be taken
@@ -106,37 +92,11 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
         // If you reach the end, start over in a new maze
         if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
             success_splash(win, maze->level + 2);
-            wclear(win);
-            clear();
-            box(win, 0, 0);
-            refresh();
-            wrefresh(win);
-            get_new_dims(maze->nrows, maze->ncols, maze->level);
 
             // generate a new maze
-            std::fill_n(player->visited, maze->max_size * maze->max_size / 2, false);
-            backtracking_maze_gen(maze);
-            gen_entrances_opposites(maze);
-            player->loc[0] = maze->start[0];
-            player->loc[1] = maze->start[1];
-
+            gen_new_maze(maze);
+            reset_player(player, maze);
             maze->level += 1;
         }
     }
-}
-
-
-/**
- *   Randomly generate maze dimensions.
- */
-static void get_new_dims(int& nrows, int& ncols, int level) {
-    level %= 20;
-
-    const int bottom_y = 15;
-    nrows = bottom_y + level / 2 + (rand() % (int)(level / 2 + 1));
-    if (nrows % 2 == 0) { nrows += 1; }
-
-    const int bottom_x = 31;
-    ncols = bottom_x + level + (rand() % (int)((level) + 1));
-    if (ncols % 2 == 0) { ncols += 1; }
 }

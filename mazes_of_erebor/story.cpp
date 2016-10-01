@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <vector>
+#include "windows.h"
 
 using namespace std;
 
@@ -94,6 +95,7 @@ void success_splash(WINDOW *win, const int count) {
                string("You are now ") + to_string(count) + string(" levels under Erebor."));
 
     content_screen(win, txt);
+    full_box_clear(win);
 }
 
 

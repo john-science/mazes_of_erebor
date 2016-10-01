@@ -9,6 +9,11 @@
 
 using namespace std;
 
+// forward declarations
+static void get_new_dims(int& nrows, int& ncols, int level);
+void backtracking_maze_gen(maze_data *maze);
+void gen_entrances_opposites(maze_data *maze);
+
 
 /**
     Get an element from the maze array.
@@ -436,4 +441,30 @@ bool maze_valid_move(const maze_data maze, int r, int c) {
     } else {
         return !maze.grid[r * maze.max_size + c];
     }
+}
+
+
+/**
+ *   Randomly generate maze dimensions.
+ */
+static void get_new_dims(int& nrows, int& ncols, int level) {
+    level %= 20;
+
+    const int bottom_y = 15;
+    nrows = bottom_y + level / 2 + (rand() % (int)(level / 2 + 1));
+    if (nrows % 2 == 0) { nrows += 1; }
+
+    const int bottom_x = 31;
+    ncols = bottom_x + level + (int)(rand() % (level + 1));
+    if (ncols % 2 == 0) { ncols += 1; }
+}
+
+
+/**
+ *   Pull everything together and generate a new maze.
+ */
+void gen_new_maze(maze_data *maze) {
+    get_new_dims(maze->nrows, maze->ncols, maze->level);
+    backtracking_maze_gen(maze);
+    gen_entrances_opposites(maze);
 }

@@ -41,5 +41,7 @@ struct game_data {
 };
 
 
+void reset_player(player_data *player, maze_data *maze);
+
 #endif
 
