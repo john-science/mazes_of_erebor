@@ -169,7 +169,7 @@ void gen_entrances_opposites(maze_data *maze)
  *   This prints from a God's Eye perspective,
  *   where the entire maze is visible.
  */
-void maze_print_easy(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
+void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
 {
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
@@ -188,7 +188,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const int player[], cons
     // open up hallways
     for (int r=0; r < max_y; r++) {
         for (int c=0; c < max_x; c++) {
-            if (player[0] == r && player[1] == c) {
+            if (p.loc[0] == r && p.loc[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "@");  // player
             } else if (maze.finish[0] == r && maze.finish[1] == c) {
@@ -214,7 +214,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const int player[], cons
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
+void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -230,8 +230,8 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
-    r = player[0];
-    c = player[1];
+    r = p.loc[0];
+    c = p.loc[1];
     while (c < (maze.ncols - 1) && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (r < (maze.nrows - 1)) {
@@ -243,7 +243,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
         c += 1;
     }
     // try going West
-    c = player[1];
+    c = p.loc[1];
     while (c > 0 && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (r < (maze.nrows - 1)) {
@@ -255,8 +255,8 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
         c -= 1;
     }
     // try going North
-    r = player[0];
-    c = player[1];
+    r = p.loc[0];
+    c = p.loc[1];
     while (r < (maze.nrows - 1) && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (c < (maze.ncols - 1)) {
@@ -268,7 +268,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
         r += 1;
     }
     // try going South
-    r = player[0];
+    r = p.loc[0];
     while (r > 0 && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (c < (maze.ncols - 1)) {
@@ -279,7 +279,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
         }
         r -= 1;
     }
-    grid[player[0] * maze.max_size + player[1]] = player_posi;
+    grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
     grid[maze.finish[0] * maze.max_size + maze.finish[1]] = finish_posi;
 
     // offsets for printing
@@ -291,7 +291,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
         for (c=0; c < maze.ncols; c++) {
             cell = grid[r * maze.max_size + c];
             if (cell == 0) {
-                if (visited[r * maze.max_size + c]) {
+                if (p.visited[r * maze.max_size + c]) {
                     wattron(win, COLOR_PAIR(5));
                     mvwprintw(win, r + r_off, c + c_off, " ");  // visited
                 } else {
@@ -321,7 +321,7 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const int player[], co
  *   but only displays the cells that are line-of-sight visible
  *   to a player carrying an infinitely-bright light source.
  */
-void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], const bool visited[])
+void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
 {
     // If we are using ncurses, this should be some sort of mutable buffer.
     const int open_hall(1);
@@ -336,8 +336,8 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
-    r = player[0];
-    c = player[1];
+    r = p.loc[0];
+    c = p.loc[1];
     while (c < (maze.ncols - 1) && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (r < (maze.nrows - 1)) {
@@ -349,7 +349,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
         c += 1;
     }
     // try going West
-    c = player[1];
+    c = p.loc[1];
     while (c > 0 && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (r < (maze.nrows - 1)) {
@@ -361,8 +361,8 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
         c -= 1;
     }
     // try going North
-    r = player[0];
-    c = player[1];
+    r = p.loc[0];
+    c = p.loc[1];
     while (r < (maze.nrows - 1) && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (c < (maze.ncols - 1)) {
@@ -374,7 +374,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
         r += 1;
     }
     // try going South
-    r = player[0];
+    r = p.loc[0];
     while (r > 0 && !maze.grid[r * maze.max_size + c]) {
         grid[r * maze.max_size + c] = open_hall;
         if (c < (maze.ncols - 1)) {
@@ -385,7 +385,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
         }
         r -= 1;
     }
-    grid[player[0] * maze.max_size + player[1]] = player_posi;
+    grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
 
     // offsets for printing
     int c_off(1 + (win_x - 2 - maze.ncols) / 2);
@@ -406,7 +406,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const int player[], cons
                     mvwprintw(win, r + r_off, c + c_off, "X");  // finish
                 } else {
                     // different colors depending on how far away the torch light reaches
-                    diff = abs(player[0] - r) + abs(player[1] - c);
+                    diff = abs(p.loc[0] - r) + abs(p.loc[1] - c);
                     if (diff < 2){
                         wattron(win, COLOR_PAIR(3));
                     } else if (diff < 4){

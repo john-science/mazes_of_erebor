@@ -45,13 +45,13 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
     }
 
     // select the appropriate print function
-    function<void(WINDOW*, const maze_data, const int[], const bool[])> maze_print = \
+    function<void(WINDOW*, const maze_data, const player_data)> maze_print = \
         state == game_easy ? maze_print_easy : (state == game_medium ? maze_print_medium : maze_print_hard);
 
     // game loop
     while (true) {
         player->visited[player->loc[0] * maze->max_size + player->loc[1]] = true;
-        maze_print(win, *maze, player->loc, player->visited);
+        maze_print(win, *maze, *player);
 
         // input and update
         c = wgetch(win);
