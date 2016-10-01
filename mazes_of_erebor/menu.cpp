@@ -1,9 +1,11 @@
 
 #include <ncurses.h>
+#include <string>
 #include "data.h"
 #include "windows.h"
 
 static void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
+void menu_header(string header, const int win_width, const int row=1);
 menu_state main_menu(WINDOW *win);
 menu_state diff_menu(WINDOW *win);
 menu_state cont_menu(WINDOW *win, game_data *data);
@@ -22,7 +24,7 @@ menu_state diff_menu(WINDOW *win)
 
     getmaxyx(stdscr, win_y, win_x);
     init_menu_window(win, win_y, win_x);
-    mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");
+    menu_header("May you live in interesting times.", win_x, 3);
     refresh();
 
     print_menu(win, highlight, choices, n_choices);
@@ -48,7 +50,7 @@ menu_state diff_menu(WINDOW *win)
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
                 init_menu_window(win, win_y, win_x);
-                mvprintw(3, win_x / 2 - 17, "May you live in interesting times.");  // TODO: Move to print menu method?
+                menu_header("May you live in interesting times.", win_x, 3);
                 refresh();
                 break;
             // no default actions to be taken
@@ -80,7 +82,7 @@ menu_state main_menu(WINDOW *win)
 
     getmaxyx(stdscr, win_y, win_x);
     init_menu_window(win, win_y, win_x);
-    mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");  // TODO: Move to print menu method?
+    menu_header("The Halls of Erebor", win_x);
     refresh();
 
     print_menu(win, highlight, choices, n_choices);
@@ -105,7 +107,7 @@ menu_state main_menu(WINDOW *win)
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
                 init_menu_window(win, win_y, win_x);
-                mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");
+                menu_header("The Halls of Erebor", win_x);
                 refresh();
                 break;
             // no default actions to be taken
@@ -133,7 +135,7 @@ menu_state cont_menu(WINDOW *win, game_data *data)
 
     getmaxyx(stdscr, win_y, win_x);
     init_menu_window(win, win_y, win_x);
-    mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");  // TODO: Move to print menu method?
+    menu_header("The Halls of Erebor", win_x);
     refresh();
 
     print_menu(win, highlight, choices, n_choices);
@@ -158,7 +160,7 @@ menu_state cont_menu(WINDOW *win, game_data *data)
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
                 init_menu_window(win, win_y, win_x);
-                mvprintw(1, win_x / 2 - 10, "The Halls of Erebor");
+                menu_header("The Halls of Erebor", win_x);
                 refresh();
                 break;
             // no default actions to be taken
@@ -172,6 +174,20 @@ menu_state cont_menu(WINDOW *win, game_data *data)
         } else if (choice == 3) {
             return quit;
         }
+    }
+}
+
+
+/**
+ *  Print the menu header.
+ */
+void menu_header(string header, const int win_width, const int row) {
+    const int str_len(header.length());
+
+    if (str_len > (win_width - 2)) {
+        mvprintw(row, 1, header.substr(0, win_width - 2).c_str());
+    } else {
+        mvprintw(row, (win_width - 2) / 2 - str_len / 2, header.c_str());
     }
 }
 
