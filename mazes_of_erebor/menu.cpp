@@ -106,9 +106,14 @@ menu_state main_menu(WINDOW *win)
                 break;
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
-                init_menu_window(win, win_y, win_x);
-                menu_header("The Halls of Erebor", win_x);
-                refresh();
+                //if (win_x < 32 || win_y < 12) {
+                //    full_box_resize(win, win_y, win_x);
+                //    //full_box_clear(win);
+                //} else {
+                    init_menu_window(win, win_y, win_x);
+                    menu_header("The Halls of Erebor", win_x);
+                    refresh();
+                //}
                 break;
             // no default actions to be taken
         }

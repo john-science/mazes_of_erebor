@@ -163,7 +163,6 @@ void gen_entrances_opposites(maze_data *maze)
 }
 
 
-// TODO: Does this work if the window is smaller than the maze?
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,
@@ -182,8 +181,8 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
     // if window is too small, limit the printed region of the maze
     int max_y(maze.nrows);
     int max_x(maze.ncols);
-    if (max_y > (win_y - 2)) { max_y = win_y < 5 ? 0 : win_y - 2; }
-    if (max_x > (win_x - 2)) { max_x = win_x < 5 ? 0 : win_x - 2; }
+    if (max_y > (win_y - 2)) { max_y = win_y < 13 ? 0 : win_y - 2; }
+    if (max_x > (win_x - 2)) { max_x = win_x < 13 ? 0 : win_x - 2; }
 
     // open up hallways
     for (int r=0; r < max_y; r++) {

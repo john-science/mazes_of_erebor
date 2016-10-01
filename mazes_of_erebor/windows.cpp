@@ -52,6 +52,8 @@ void init_menu_window(WINDOW *win, int win_y, int win_x) {
     int startx(0);
     starty = (height - MENU_HEIGHT) / 2;
     startx = (width - MENU_WIDTH) / 2;
+    starty = starty > 0 ? starty : 0;
+    startx = startx > 0 ? startx : 0;
 
     *win = *newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
     keypad(win, TRUE);
@@ -69,7 +71,6 @@ void init_maze_window(WINDOW *win) {
     getmaxyx(stdscr, win_y, win_x);
     wresize(win, win_y, win_x);
     wclear(win);
-    box(win, 0, 0);
 }
 
 
@@ -79,7 +80,6 @@ void init_maze_window(WINDOW *win) {
 void full_box_clear(WINDOW *win) {
     wclear(win);
     clear();
-    box(win, 0, 0);
     refresh();
     wrefresh(win);
 }
@@ -91,7 +91,6 @@ void full_box_clear(WINDOW *win) {
 void full_box_resize(WINDOW *win, int win_y, int win_x) {
     wresize(win, win_y, win_x);
     wclear(win);
-    box(win, 0, 0);
     refresh();
     wrefresh(win);
 }
