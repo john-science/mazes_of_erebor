@@ -1,13 +1,8 @@
 
 #include <ncurses.h>
 
-// global variables
-const int MENU_WIDTH(30);
-const int MENU_HEIGHT(10);
-
 // forward declaration
 WINDOW* init_window();
-void init_menu_window(WINDOW *win, int win_y, int win_x);
 void init_maze_window(WINDOW *win, int& win_y, int& win_x);
 void full_box_clear(WINDOW *win);
 void full_box_resize(WINDOW *win, int win_y, int win_x);
@@ -38,27 +33,6 @@ WINDOW* init_window() {
 
     getmaxyx(stdscr, win_y, win_x);
     return newwin(win_y, win_x, 0, 0);
-}
-
-
-/**
- *   NCURSES initializer for a menu
- */
-void init_menu_window(WINDOW *win, int win_y, int win_x) {
-    int height(MENU_HEIGHT > win_y ? MENU_HEIGHT : win_y);
-    int width(MENU_WIDTH > win_x ? MENU_WIDTH : win_x);
-
-    int starty(0);
-    int startx(0);
-    starty = (height - MENU_HEIGHT) / 2;
-    startx = (width - MENU_WIDTH) / 2;
-    starty = starty > 0 ? starty : 0;
-    startx = startx > 0 ? startx : 0;
-
-    *win = *newwin(MENU_HEIGHT, MENU_WIDTH, starty, startx);
-    keypad(win, TRUE);
-
-    clear();
 }
 
 

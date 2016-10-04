@@ -198,6 +198,8 @@ static void menu_header(string header, const int win_width, const int row) {
  */
 static void print_menu(WINDOW *win, const int highlight, char const **choices, const int n_choices, const int win_y, const int win_x)
 {
+    static const int buffer_y(6);
+    static const int buffer_x(6);
     int i;
     int x(2);
     int y(2);
@@ -211,16 +213,20 @@ static void print_menu(WINDOW *win, const int highlight, char const **choices, c
     }
 
     // find top-left corner of menu box
-    int r_off((win_y - (n_choices + 4)) / 2);
-    int c_off((win_x - (max_len + 4)) / 2);
+    int r_off((win_y - (n_choices + buffer_y)) / 2);
+    int c_off((win_x - (max_len + buffer_x)) / 2);
     r_off = r_off > -1 ? r_off : 0;
     c_off = c_off > -1 ? c_off : 0;
 
     // print menu box
     wattron(win, A_REVERSE);
-    for(i=0; i < (int)max_len + 4; ++i) {
+    for(i=0; i < (int)max_len + buffer_x; ++i) {
         mvwprintw(win, r_off, i + c_off, " ");
-        mvwprintw(win, r_off + n_choices + 3, i + c_off, " ");
+        mvwprintw(win, r_off + n_choices + buffer_y - 1, i + c_off, " ");
+    }
+    for(i=1; i < n_choices + buffer_y - 1; ++i) {
+        mvwprintw(win, r_off + i, c_off, " ");
+        mvwprintw(win, r_off + i, c_off + buffer_x + max_len - 1, " ");
     }
     wattroff(win, A_REVERSE);
 
