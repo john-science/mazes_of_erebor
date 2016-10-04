@@ -13,6 +13,7 @@
 int main()
 {
     WINDOW *win = init_window();
+    keypad(win, TRUE);
     srand(time(0));
 
     // create a default game data object

@@ -1,11 +1,12 @@
 
 #include <ncurses.h>
 #include <string>
+#include <string.h>
 #include "data.h"
 #include "windows.h"
 
-static void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices);
-void menu_header(string header, const int win_width, const int row=1);
+static void print_menu(WINDOW *win, const int highlight, char const **choices, const int n_choices, const int win_y, const int win_x);
+static void menu_header(string header, const int win_width, const int row=1);
 menu_state main_menu(WINDOW *win);
 menu_state diff_menu(WINDOW *win);
 menu_state cont_menu(WINDOW *win, game_data *data);
@@ -23,11 +24,11 @@ menu_state diff_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    init_menu_window(win, win_y, win_x);
+    clear();
     menu_header("May you live in interesting times.", win_x, 3);
     refresh();
 
-    print_menu(win, highlight, choices, n_choices);
+    print_menu(win, highlight, choices, n_choices, win_y, win_x);
     while (true) {
         // input and update
         c = wgetch(win);
@@ -49,14 +50,14 @@ menu_state diff_menu(WINDOW *win)
                 break;
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
-                init_menu_window(win, win_y, win_x);
+                full_box_resize(win, win_y, win_x);
                 menu_header("May you live in interesting times.", win_x, 3);
                 refresh();
                 break;
             // no default actions to be taken
         }
         // display
-        print_menu(win, highlight, choices, n_choices);
+        print_menu(win, highlight, choices, n_choices, win_y, win_x);
         // update
         if (choice == 1) {
             return game_easy;
@@ -81,11 +82,11 @@ menu_state main_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    init_menu_window(win, win_y, win_x);
+    wrefresh(win);
     menu_header("The Halls of Erebor", win_x);
     refresh();
 
-    print_menu(win, highlight, choices, n_choices);
+    print_menu(win, highlight, choices, n_choices, win_y, win_x);
     while (true) {
         c = wgetch(win);
         switch (c) {
@@ -106,18 +107,13 @@ menu_state main_menu(WINDOW *win)
                 break;
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
-                //if (win_x < 32 || win_y < 12) {
-                //    full_box_resize(win, win_y, win_x);
-                //    //full_box_clear(win);
-                //} else {
-                    init_menu_window(win, win_y, win_x);
-                    menu_header("The Halls of Erebor", win_x);
-                    refresh();
-                //}
+                full_box_resize(win, win_y, win_x);
+                menu_header("The Halls of Erebor", win_x);
+                refresh();
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices);
+        print_menu(win, highlight, choices, n_choices, win_y, win_x);
         if (choice == 1) {
             return menu_diff;
         } else if (choice == 2) {
@@ -139,11 +135,11 @@ menu_state cont_menu(WINDOW *win, game_data *data)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    init_menu_window(win, win_y, win_x);
+    clear();
     menu_header("The Halls of Erebor", win_x);
     refresh();
 
-    print_menu(win, highlight, choices, n_choices);
+    print_menu(win, highlight, choices, n_choices, win_y, win_x);
     while (true) {
         c = wgetch(win);
         switch (c) {
@@ -164,13 +160,13 @@ menu_state cont_menu(WINDOW *win, game_data *data)
                 break;
             case 410:  // window resize
                 getmaxyx(stdscr, win_y, win_x);
-                init_menu_window(win, win_y, win_x);
+                full_box_resize(win, win_y, win_x);
                 menu_header("The Halls of Erebor", win_x);
                 refresh();
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices);
+        print_menu(win, highlight, choices, n_choices, win_y, win_x);
         if (choice == 1) {
             data->maze.level = -1;
             return menu_diff;
@@ -186,7 +182,7 @@ menu_state cont_menu(WINDOW *win, game_data *data)
 /**
  *  Print the menu header.
  */
-void menu_header(string header, const int win_width, const int row) {
+static void menu_header(string header, const int win_width, const int row) {
     const int str_len(header.length());
 
     if (str_len > (win_width - 2)) {
@@ -200,26 +196,46 @@ void menu_header(string header, const int win_width, const int row) {
 /**
  *  Print a simple menu window
  */
-static void print_menu(WINDOW *win, int highlight, char const **choices, int n_choices)
+static void print_menu(WINDOW *win, const int highlight, char const **choices, const int n_choices, const int win_y, const int win_x)
 {
     int i;
     int x(2);
     int y(2);
 
-    box(win, 0, 0);
+    // determine length of longest menu option
+    unsigned int max_len = strlen(choices[0]);
+    for(i=1; i < n_choices; ++i) {
+        if (strlen(choices[i]) > max_len) {
+            max_len = strlen(choices[i]);
+        }
+    }
 
+    // find top-left corner of menu box
+    int r_off((win_y - (n_choices + 4)) / 2);
+    int c_off((win_x - (max_len + 4)) / 2);
+    r_off = r_off > -1 ? r_off : 0;
+    c_off = c_off > -1 ? c_off : 0;
+
+    // print menu box
+    wattron(win, A_REVERSE);
+    for(i=0; i < (int)max_len + 4; ++i) {
+        mvwprintw(win, r_off, i + c_off, " ");
+        mvwprintw(win, r_off + n_choices + 3, i + c_off, " ");
+    }
+    wattroff(win, A_REVERSE);
+
+    // print menu options
     for(i = 0; i < n_choices; ++i)
     {
         // Highlight the present choice
         if (highlight == i + 1) {
             wattron(win, A_REVERSE);
-            mvwprintw(win, y, x, "%s", choices[i]);
+            mvwprintw(win, y + r_off, x + c_off, "%s", choices[i]);
             wattroff(win, A_REVERSE);
         }
         else
-            mvwprintw(win, y, x, "%s", choices[i]);
+            mvwprintw(win, y + r_off, x + c_off, "%s", choices[i]);
         ++y;
     }
     wrefresh(win);
 }
-
