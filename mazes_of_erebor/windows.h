@@ -2,10 +2,6 @@
 #ifndef WINDOWS_H
 #define WINDOWS_H
 
-// global variables
-const int MENU_WIDTH(30);
-const int MENU_HEIGHT(10);
-
 // forward declaration
 WINDOW* init_window();
 void init_maze_window(WINDOW *win);

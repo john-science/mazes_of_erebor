@@ -170,38 +170,40 @@ void gen_entrances_opposites(maze_data *maze)
  */
 void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
 {
+    // get window dimensions
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
 
+    // coordinates of corner of maze, on the screen
     int c_off(1 + ((win_x - maze.ncols - 2) / 2));
     int r_off(1 + ((win_y - maze.nrows - 2) / 2));
-    if (c_off < 1) { c_off = 1; }
-    if (r_off < 1) { r_off = 1; }
 
-    // if window is too small, limit the printed region of the maze
+    // region of maze that can be printed
     int min_y(0);
     int min_x(0);
     int max_y(maze.nrows);
     int max_x(maze.ncols);
+
+    // if window is too small, limit the printed region of the maze
     if (max_y > (win_y - 2)) {
-        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
         min_y = p.loc[0] - (win_y - 2) / 2;
+        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
         r_off = 1 - min_y;
+        if (min_y < 0) {min_y = 0;}
+        if (max_y > maze.nrows) {max_y = maze.nrows;}
     }
     if (max_x > (win_x - 2)) {
-        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
         min_x = p.loc[1] - (win_x - 2) / 2;
+        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
         c_off = 1 - min_x;
+        if (min_x < 0) {min_x = 0;}
+        if (max_x > maze.ncols) {max_x = maze.ncols;}
     }
-
-    if (min_y < 0) {min_y = 0;}
-    if (min_x < 0) {min_x = 0;}
-    if (max_y > maze.nrows) {max_y = maze.nrows;}
-    if (max_x > maze.ncols) {max_x = maze.ncols;}
 
     clear();
     wclear(win);
-    // open up hallways
+
+    // do the actual (colored) printing
     for (int r=min_y; r < max_y; r++) {
         for (int c=min_x; c < max_x; c++) {
             if (p.loc[0] == r && p.loc[1] == c) {
@@ -223,6 +225,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
             }
         }
     }
+
     refresh();
     wrefresh(win);
 }
@@ -242,11 +245,8 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
     const int finish_posi(3);
     int r(0);
     int c(0);
-    int cell;
     int grid[maze.nrows * maze.max_size + maze.ncols];  // TODO: Dims all wrong?
     fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);  // TODO: Dims all wrong?
-    int win_y, win_x;
-    getmaxyx(stdscr, win_y, win_x);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -302,13 +302,43 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
     grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
     grid[maze.finish[0] * maze.max_size + maze.finish[1]] = finish_posi;
 
-    // offsets for printing
-    int c_off(1 + (win_x - 2 - maze.ncols) / 2);
-    int r_off(1 + (win_y - 1 - maze.nrows) / 2);
+    // get window dimensions
+    int win_y, win_x;
+    getmaxyx(stdscr, win_y, win_x);
 
-    // open up hallways
-    for (r=0; r < maze.nrows; r++) {
-        for (c=0; c < maze.ncols; c++) {
+    // coordinates of corner of maze, on the screen
+    int c_off(1 + ((win_x - maze.ncols - 2) / 2));
+    int r_off(1 + ((win_y - maze.nrows - 2) / 2));
+
+    // region of maze that can be printed
+    int min_y(0);
+    int min_x(0);
+    int max_y(maze.nrows);
+    int max_x(maze.ncols);
+
+    // if window is too small, limit the printed region of the maze
+    if (max_y > (win_y - 2)) {
+        min_y = p.loc[0] - (win_y - 2) / 2;
+        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
+        r_off = 1 - min_y;
+        if (min_y < 0) {min_y = 0;}
+        if (max_y > maze.nrows) {max_y = maze.nrows;}
+    }
+    if (max_x > (win_x - 2)) {
+        min_x = p.loc[1] - (win_x - 2) / 2;
+        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
+        c_off = 1 - min_x;
+        if (min_x < 0) {min_x = 0;}
+        if (max_x > maze.ncols) {max_x = maze.ncols;}
+    }
+
+    clear();
+    wclear(win);
+
+    // do the actual (colored) printing
+    int cell;
+    for (r=min_y; r < max_y; r++) {
+        for (c=min_x; c < max_x; c++) {
             cell = grid[r * maze.max_size + c];
             if (cell == 0) {
                 if (p.visited[r * maze.max_size + c]) {
@@ -331,6 +361,8 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
             }
         }
     }
+
+    refresh();
     wrefresh(win);
 }
 
@@ -348,11 +380,8 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
     const int player_posi(2);
     int r(0);
     int c(0);
-    int cell;
     int grid[maze.nrows * maze.max_size + maze.ncols];
     fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);
-    int win_y, win_x;
-    getmaxyx(stdscr, win_y, win_x);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
@@ -407,14 +436,44 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
     }
     grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
 
-    // offsets for printing
-    int c_off(1 + (win_x - 2 - maze.ncols) / 2);
-    int r_off(1 + (win_y - 1 - maze.nrows) / 2);
+    // get window dimensions
+    int win_y, win_x;
+    getmaxyx(stdscr, win_y, win_x);
 
-    // open up hallways
+    // coordinates of corner of maze, on the screen
+    int c_off(1 + ((win_x - maze.ncols - 2) / 2));
+    int r_off(1 + ((win_y - maze.nrows - 2) / 2));
+
+    // region of maze that can be printed
+    int min_y(0);
+    int min_x(0);
+    int max_y(maze.nrows);
+    int max_x(maze.ncols);
+
+    // if window is too small, limit the printed region of the maze
+    if (max_y > (win_y - 2)) {
+        min_y = p.loc[0] - (win_y - 2) / 2;
+        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
+        r_off = 1 - min_y;
+        if (min_y < 0) {min_y = 0;}
+        if (max_y > maze.nrows) {max_y = maze.nrows;}
+    }
+    if (max_x > (win_x - 2)) {
+        min_x = p.loc[1] - (win_x - 2) / 2;
+        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
+        c_off = 1 - min_x;
+        if (min_x < 0) {min_x = 0;}
+        if (max_x > maze.ncols) {max_x = maze.ncols;}
+    }
+
+    clear();
+    wclear(win);
+
+    // do the actual (colored) printing
+    int cell;
     int diff;
-    for (r=0; r < maze.nrows; r++) {
-        for (c=0; c < maze.ncols; c++) {
+    for (r=min_y; r < max_y; r++) {
+        for (c=min_x; c < max_x; c++) {
             cell = grid[r * maze.max_size + c];
             if (cell == 0) {
                 wattron(win, COLOR_PAIR(1));
@@ -444,12 +503,52 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
             }
         }
     }
+
+    refresh();
     wrefresh(win);
 }
 
 
 /**
-    Determine if a particular grid cell is a valid move.
+ *  Get the limits of the maze printing region,
+ *  and check for the case where the maze is bigger than the screen.
+ */
+void get_printing_dimensions(WINDOW* win, const maze_data maze, const player_data p, \
+                             int& min_x, int& max_x, int& min_y, int& max_y, int& r_off, int& c_off) {
+    // get window dimensions
+    int win_y, win_x;
+    getmaxyx(stdscr, win_y, win_x);
+
+    // coordinates of corner of maze, on the screen
+    c_off = 1 + ((win_x - maze.ncols - 2) / 2);
+    r_off = 1 + ((win_y - maze.nrows - 2) / 2);
+
+    // region of maze that can be printed
+    min_y = 0;
+    min_x = 0;
+    max_y = maze.nrows;
+    max_x = maze.ncols;
+
+    // if window is too small, limit the printed region of the maze
+    if (max_y > (win_y - 2)) {
+        min_y = p.loc[0] - (win_y - 2) / 2;
+        max_y = win_y < MIN_WINDOW_SIZE ? 0 : p.loc[0] + (win_y - 2) / 2;
+        r_off = 1 - min_y;
+        if (min_y < 0) {min_y = 0;}
+        if (max_y > maze.nrows) {max_y = maze.nrows;}
+    }
+    if (max_x > (win_x - 2)) {
+        min_x = p.loc[1] - (win_x - 2) / 2;
+        max_x = win_x < MIN_WINDOW_SIZE ? 0 : p.loc[1] + (win_x - 2) / 2;
+        c_off = 1 - min_x;
+        if (min_x < 0) {min_x = 0;}
+        if (max_x > maze.ncols) {max_x = maze.ncols;}
+    }
+}
+
+
+/**
+ *  Determine if a particular grid cell is a valid move.
  */
 bool maze_valid_move(const maze_data maze, int r, int c) {
     if (r < 0 || c < 0) {

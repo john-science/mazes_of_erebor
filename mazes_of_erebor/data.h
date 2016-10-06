@@ -6,6 +6,8 @@
 
 using namespace std;
 
+
+const int MIN_WINDOW_SIZE(15);
 const int MAX_MAZE_SIZE(71);
 
 
