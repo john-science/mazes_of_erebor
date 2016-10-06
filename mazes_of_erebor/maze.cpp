@@ -172,30 +172,50 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
 {
     int win_y, win_x;
     getmaxyx(stdscr, win_y, win_x);
+
     int c_off(1 + ((win_x - maze.ncols - 2) / 2));
     int r_off(1 + ((win_y - maze.nrows - 2) / 2));
     if (c_off < 1) { c_off = 1; }
     if (r_off < 1) { r_off = 1; }
 
-    // TODO: Center this region around the player?
     // if window is too small, limit the printed region of the maze
+    int min_y(0);
+    int min_x(0);
     int max_y(maze.nrows);
     int max_x(maze.ncols);
-    if (max_y > (win_y - 2)) { max_y = win_y < 13 ? 0 : win_y - 2; }
-    if (max_x > (win_x - 2)) { max_x = win_x < 13 ? 0 : win_x - 2; }
+    if (max_y > (win_y - 2)) {
+        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
+        min_y = p.loc[0] - (win_y - 2) / 2;
+        r_off = 1 - min_y;
+    }
+    if (max_x > (win_x - 2)) {
+        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
+        min_x = p.loc[1] - (win_x - 2) / 2;
+        c_off = 1 - min_x;
+    }
 
+    if (min_y < 0) {min_y = 0;}
+    if (min_x < 0) {min_x = 0;}
+    if (max_y > maze.nrows) {max_y = maze.nrows;}
+    if (max_x > maze.ncols) {max_x = maze.ncols;}
+
+    clear();
+    wclear(win);
     // open up hallways
-    for (int r=0; r < max_y; r++) {
-        for (int c=0; c < max_x; c++) {
+    for (int r=min_y; r < max_y; r++) {
+        for (int c=min_x; c < max_x; c++) {
             if (p.loc[0] == r && p.loc[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "@");  // player
+                wattroff(win, COLOR_PAIR(6));
             } else if (maze.finish[0] == r && maze.finish[1] == c) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "X");  // finish
+                wattroff(win, COLOR_PAIR(6));
             } else if (!maze.grid[c + r * maze.max_size]) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, " ");  // hallway
+                wattroff(win, COLOR_PAIR(6));
             } else {
                 wattron(win, COLOR_PAIR(3));
                 mvwprintw(win, r + r_off, c + c_off, "#");  // wall
@@ -203,6 +223,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
             }
         }
     }
+    refresh();
     wrefresh(win);
 }
 
