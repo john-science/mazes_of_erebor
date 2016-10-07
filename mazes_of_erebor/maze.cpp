@@ -21,9 +21,9 @@ void get_printing_dimensions(WINDOW* win, const maze_data maze, const player_dat
     Get an element from the maze array.
     (This handles the math to treat a 1D array as a 2D array.)
 */
-bool maze_get(const maze_data maze, int row, int col)
+bool maze_get(const maze_data maze, const int row, const int col)
 {
-    return maze.grid[col + row * maze.max_size];
+    return maze.grid[col + row * maze.ncols];
 }
 
 
@@ -31,16 +31,16 @@ bool maze_get(const maze_data maze, int row, int col)
     Set an element from the maze array.
     (This handles the math to treat a 1D array as a 2D array.)
 */
-void maze_set(maze_data *maze, int row, int col, bool value)
+void maze_set(maze_data *maze, const int row, const int col, const bool value)
 {
-    maze->grid[col + row * maze->max_size] = value;
+    maze->grid[col + row * maze->ncols] = value;
 }
 
 
 /**
     Find a random, un-opened neighbor of a maze cell.
 */
-int* find_neighbor(const maze_data maze, int row, int col, int result[])
+int* find_neighbor(const maze_data maze, const int row, const int col, int result[])
 {
     int order[4] = {0, 1, 2, 3};
     result[0] = -999;
@@ -89,7 +89,7 @@ void backtracking_maze_gen(maze_data *maze)
     stack <int> track;
 
     // ensure maze is correctly initialized
-    fill_n(maze->grid, maze->max_size * maze->max_size / 2, true);
+    fill_n(maze->grid, maze->nrows * maze->ncols, true);
 
     // pick a random starting point
     row = 1 + 2 * (rand() % ((maze->nrows - 1) / 2));
@@ -160,8 +160,8 @@ void gen_entrances_opposites(maze_data *maze)
         }
     }
 
-    maze->grid[maze->start[0] * maze->max_size + maze->start[1]] = false;
-    maze->grid[maze->finish[0] * maze->max_size + maze->finish[1]] = false;
+    maze->grid[maze->start[0] * maze->ncols + maze->start[1]] = false;
+    maze->grid[maze->finish[0] * maze->ncols + maze->finish[1]] = false;
 }
 
 
@@ -189,7 +189,7 @@ void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "X");  // finish
                 wattroff(win, COLOR_PAIR(6));
-            } else if (!maze.grid[c + r * maze.max_size]) {
+            } else if (!maze.grid[c + r * maze.ncols]) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, " ");  // hallway
                 wattroff(win, COLOR_PAIR(6));
@@ -220,62 +220,62 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
     const int finish_posi(3);
     int r(0);
     int c(0);
-    int grid[maze.nrows * maze.max_size + maze.ncols];  // TODO: Dims all wrong?
-    fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);  // TODO: Dims all wrong?
+    int grid[maze.nrows * maze.ncols];
+    fill_n(grid, maze.nrows * maze.ncols, 0);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
     r = p.loc[0];
     c = p.loc[1];
-    while (c < (maze.ncols - 1) && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (c < (maze.ncols - 1) && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (r < (maze.nrows - 1)) {
-            if (!maze.grid[(r + 1) * maze.max_size + c]) {grid[(r + 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r + 1) * maze.ncols + c]) {grid[(r + 1) * maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!maze.grid[(r - 1) * maze.max_size + c]) {grid[(r - 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r - 1) * maze.ncols + c]) {grid[(r - 1) * maze.ncols + c] = open_hall;}
         }
         c += 1;
     }
     // try going West
     c = p.loc[1];
-    while (c > 0 && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (c > 0 && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (r < (maze.nrows - 1)) {
-            if (!maze.grid[(r + 1) * maze.max_size + c]) {grid[(r + 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r + 1) * maze.ncols + c]) {grid[(r + 1) * maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!maze.grid[(r - 1) * maze.max_size + c]) {grid[(r - 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r - 1) * maze.ncols + c]) {grid[(r - 1) * maze.ncols + c] = open_hall;}
         }
         c -= 1;
     }
     // try going North
     r = p.loc[0];
     c = p.loc[1];
-    while (r < (maze.nrows - 1) && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (r < (maze.nrows - 1) && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (c < (maze.ncols - 1)) {
-            if (!maze.grid[r * maze.max_size + c + 1]) {grid[r * maze.max_size + c + 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c + 1]) {grid[r * maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!maze.grid[r * maze.max_size + c - 1]) {grid[r * maze.max_size + c - 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c - 1]) {grid[r * maze.ncols + c - 1] = open_hall;}
         }
         r += 1;
     }
     // try going South
     r = p.loc[0];
-    while (r > 0 && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (r > 0 && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (c < (maze.ncols - 1)) {
-            if (!maze.grid[r * maze.max_size + c + 1]) {grid[r * maze.max_size + c + 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c + 1]) {grid[r * maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!maze.grid[r * maze.max_size + c - 1]) {grid[r * maze.max_size + c - 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c - 1]) {grid[r * maze.ncols + c - 1] = open_hall;}
         }
         r -= 1;
     }
-    grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
-    grid[maze.finish[0] * maze.max_size + maze.finish[1]] = finish_posi;
+    grid[p.loc[0] * maze.ncols + p.loc[1]] = player_posi;
+    grid[maze.finish[0] * maze.ncols + maze.finish[1]] = finish_posi;
 
     int min_x, max_x, min_y, max_y, c_off, r_off;
     get_printing_dimensions(win, maze, p, min_x, max_x, min_y, max_y, r_off, c_off);
@@ -287,9 +287,9 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
     int cell;
     for (r=min_y; r < max_y; r++) {
         for (c=min_x; c < max_x; c++) {
-            cell = grid[r * maze.max_size + c];
+            cell = grid[r * maze.ncols + c];
             if (cell == 0) {
-                if (p.visited[r * maze.max_size + c]) {
+                if (p.visited[r * maze.ncols + c]) {
                     wattron(win, COLOR_PAIR(5));
                     mvwprintw(win, r + r_off, c + c_off, " ");  // visited
                 } else {
@@ -328,61 +328,61 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
     const int player_posi(2);
     int r(0);
     int c(0);
-    int grid[maze.nrows * maze.max_size + maze.ncols];
-    fill_n(grid, maze.nrows * maze.max_size + maze.ncols, 0);
+    int grid[maze.nrows * maze.ncols];
+    fill_n(grid, maze.nrows * maze.ncols, 0);
 
     // start at the player and go in all 4 directions, looking for deadends
     // try going East
     r = p.loc[0];
     c = p.loc[1];
-    while (c < (maze.ncols - 1) && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (c < (maze.ncols - 1) && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (r < (maze.nrows - 1)) {
-            if (!maze.grid[(r + 1) * maze.max_size + c]) {grid[(r + 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r + 1) * maze.ncols + c]) {grid[(r + 1) * maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!maze.grid[(r - 1) * maze.max_size + c]) {grid[(r - 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r - 1) * maze.ncols + c]) {grid[(r - 1) * maze.ncols + c] = open_hall;}
         }
         c += 1;
     }
     // try going West
     c = p.loc[1];
-    while (c > 0 && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (c > 0 && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (r < (maze.nrows - 1)) {
-            if (!maze.grid[(r + 1) * maze.max_size + c]) {grid[(r + 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r + 1) * maze.ncols + c]) {grid[(r + 1) * maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!maze.grid[(r - 1) * maze.max_size + c]) {grid[(r - 1) * maze.max_size + c] = open_hall;}
+            if (!maze.grid[(r - 1) * maze.ncols + c]) {grid[(r - 1) * maze.ncols + c] = open_hall;}
         }
         c -= 1;
     }
     // try going North
     r = p.loc[0];
     c = p.loc[1];
-    while (r < (maze.nrows - 1) && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (r < (maze.nrows - 1) && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (c < (maze.ncols - 1)) {
-            if (!maze.grid[r * maze.max_size + c + 1]) {grid[r * maze.max_size + c + 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c + 1]) {grid[r * maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!maze.grid[r * maze.max_size + c - 1]) {grid[r * maze.max_size + c - 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c - 1]) {grid[r * maze.ncols + c - 1] = open_hall;}
         }
         r += 1;
     }
     // try going South
     r = p.loc[0];
-    while (r > 0 && !maze.grid[r * maze.max_size + c]) {
-        grid[r * maze.max_size + c] = open_hall;
+    while (r > 0 && !maze.grid[r * maze.ncols + c]) {
+        grid[r * maze.ncols + c] = open_hall;
         if (c < (maze.ncols - 1)) {
-            if (!maze.grid[r * maze.max_size + c + 1]) {grid[r * maze.max_size + c + 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c + 1]) {grid[r * maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!maze.grid[r * maze.max_size + c - 1]) {grid[r * maze.max_size + c - 1] = open_hall;}
+            if (!maze.grid[r * maze.ncols + c - 1]) {grid[r * maze.ncols + c - 1] = open_hall;}
         }
         r -= 1;
     }
-    grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
+    grid[p.loc[0] * maze.ncols + p.loc[1]] = player_posi;
 
     int min_x, max_x, min_y, max_y, c_off, r_off;
     get_printing_dimensions(win, maze, p, min_x, max_x, min_y, max_y, r_off, c_off);
@@ -395,7 +395,7 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
     int diff;
     for (r=min_y; r < max_y; r++) {
         for (c=min_x; c < max_x; c++) {
-            cell = grid[r * maze.max_size + c];
+            cell = grid[r * maze.ncols + c];
             if (cell == 0) {
                 wattron(win, COLOR_PAIR(1));
                 mvwprintw(win, r + r_off, c + c_off, " ");  // wall
@@ -479,7 +479,7 @@ bool maze_valid_move(const maze_data maze, int r, int c) {
     } else if (c >= maze.ncols) {
         return false;
     } else {
-        return !maze.grid[r * maze.max_size + c];
+        return !maze.grid[r * maze.ncols + c];
     }
 }
 
@@ -490,11 +490,13 @@ bool maze_valid_move(const maze_data maze, int r, int c) {
 static void get_new_dims(int& nrows, int& ncols, int level) {
     level %= 20;
 
-    const int bottom_y = 15;
+    // min y dim is MAX_DIM / 4 (round up to be odd)
+    const int bottom_y((MAX_MAZE_SIZE / 4) % 2 == 0 ? 1 + MAX_MAZE_SIZE / 4 : MAX_MAZE_SIZE / 4);
     nrows = bottom_y + level / 2 + (rand() % (int)(level / 2 + 1));
     if (nrows % 2 == 0) { nrows += 1; }
 
-    const int bottom_x = 31;
+    // min x dim is twice min y dim (plus one to make it odd)
+    const int bottom_x(1 + 2 * bottom_y);
     ncols = bottom_x + level + (int)(rand() % (level + 1));
     if (ncols % 2 == 0) { ncols += 1; }
 }
@@ -505,6 +507,8 @@ static void get_new_dims(int& nrows, int& ncols, int level) {
  */
 void gen_new_maze(maze_data *maze) {
     get_new_dims(maze->nrows, maze->ncols, maze->level);
+    delete[] maze->grid;
+    maze->grid = new bool[maze->nrows * maze->ncols];
     backtracking_maze_gen(maze);
     gen_entrances_opposites(maze);
 }

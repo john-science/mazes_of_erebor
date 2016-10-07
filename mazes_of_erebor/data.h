@@ -17,12 +17,11 @@ enum menu_state {menu_main, menu_diff, menu_cont,
 
 
 struct maze_data {
-    bool grid[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
+    int nrows = 19;
+    int ncols = 31;
+    bool *grid = new bool[nrows * ncols];
     int level = -1;
     menu_state difficulty = game_easy;
-    int nrows = 19 < MAX_MAZE_SIZE ? 19 : MAX_MAZE_SIZE;
-    int ncols = 31 < MAX_MAZE_SIZE ? 31 : MAX_MAZE_SIZE;
-    int max_size = MAX_MAZE_SIZE;
     int start[2] = {1, 1};
     int finish[2] = {1, 1};
 };
@@ -33,7 +32,7 @@ struct player_data {
     string name = "Khorin";
     string parent1 = "Balin";  // dwarf
     string parent2 = "Rogyr";  // human
-    bool visited[MAX_MAZE_SIZE * MAX_MAZE_SIZE / 2];
+    bool *visited = new bool[1];
 };
 
 

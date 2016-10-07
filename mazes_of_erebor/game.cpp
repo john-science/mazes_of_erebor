@@ -50,7 +50,7 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
 
     // game loop
     while (true) {
-        player->visited[player->loc[0] * maze->max_size + player->loc[1]] = true;
+        player->visited[player->loc[0] * maze->ncols + player->loc[1]] = true;
         maze_print(win, *maze, *player);
 
         // input and update
