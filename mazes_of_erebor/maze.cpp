@@ -13,6 +13,8 @@ using namespace std;
 static void get_new_dims(int& nrows, int& ncols, int level);
 void backtracking_maze_gen(maze_data *maze);
 void gen_entrances_opposites(maze_data *maze);
+void get_printing_dimensions(WINDOW* win, const maze_data maze, const player_data p, \
+                             int& min_x, int& max_x, int& min_y, int& max_y, int& r_off, int& c_off);
 
 
 /**
@@ -170,35 +172,8 @@ void gen_entrances_opposites(maze_data *maze)
  */
 void maze_print_easy(WINDOW *win, const maze_data maze, const player_data p)
 {
-    // get window dimensions
-    int win_y, win_x;
-    getmaxyx(stdscr, win_y, win_x);
-
-    // coordinates of corner of maze, on the screen
-    int c_off(1 + ((win_x - maze.ncols - 2) / 2));
-    int r_off(1 + ((win_y - maze.nrows - 2) / 2));
-
-    // region of maze that can be printed
-    int min_y(0);
-    int min_x(0);
-    int max_y(maze.nrows);
-    int max_x(maze.ncols);
-
-    // if window is too small, limit the printed region of the maze
-    if (max_y > (win_y - 2)) {
-        min_y = p.loc[0] - (win_y - 2) / 2;
-        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
-        r_off = 1 - min_y;
-        if (min_y < 0) {min_y = 0;}
-        if (max_y > maze.nrows) {max_y = maze.nrows;}
-    }
-    if (max_x > (win_x - 2)) {
-        min_x = p.loc[1] - (win_x - 2) / 2;
-        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
-        c_off = 1 - min_x;
-        if (min_x < 0) {min_x = 0;}
-        if (max_x > maze.ncols) {max_x = maze.ncols;}
-    }
+    int min_x, max_x, min_y, max_y, c_off, r_off;
+    get_printing_dimensions(win, maze, p, min_x, max_x, min_y, max_y, r_off, c_off);
 
     clear();
     wclear(win);
@@ -302,35 +277,8 @@ void maze_print_medium(WINDOW *win, const maze_data maze, const player_data p)
     grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
     grid[maze.finish[0] * maze.max_size + maze.finish[1]] = finish_posi;
 
-    // get window dimensions
-    int win_y, win_x;
-    getmaxyx(stdscr, win_y, win_x);
-
-    // coordinates of corner of maze, on the screen
-    int c_off(1 + ((win_x - maze.ncols - 2) / 2));
-    int r_off(1 + ((win_y - maze.nrows - 2) / 2));
-
-    // region of maze that can be printed
-    int min_y(0);
-    int min_x(0);
-    int max_y(maze.nrows);
-    int max_x(maze.ncols);
-
-    // if window is too small, limit the printed region of the maze
-    if (max_y > (win_y - 2)) {
-        min_y = p.loc[0] - (win_y - 2) / 2;
-        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
-        r_off = 1 - min_y;
-        if (min_y < 0) {min_y = 0;}
-        if (max_y > maze.nrows) {max_y = maze.nrows;}
-    }
-    if (max_x > (win_x - 2)) {
-        min_x = p.loc[1] - (win_x - 2) / 2;
-        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
-        c_off = 1 - min_x;
-        if (min_x < 0) {min_x = 0;}
-        if (max_x > maze.ncols) {max_x = maze.ncols;}
-    }
+    int min_x, max_x, min_y, max_y, c_off, r_off;
+    get_printing_dimensions(win, maze, p, min_x, max_x, min_y, max_y, r_off, c_off);
 
     clear();
     wclear(win);
@@ -436,35 +384,8 @@ void maze_print_hard(WINDOW *win, const maze_data maze, const player_data p)
     }
     grid[p.loc[0] * maze.max_size + p.loc[1]] = player_posi;
 
-    // get window dimensions
-    int win_y, win_x;
-    getmaxyx(stdscr, win_y, win_x);
-
-    // coordinates of corner of maze, on the screen
-    int c_off(1 + ((win_x - maze.ncols - 2) / 2));
-    int r_off(1 + ((win_y - maze.nrows - 2) / 2));
-
-    // region of maze that can be printed
-    int min_y(0);
-    int min_x(0);
-    int max_y(maze.nrows);
-    int max_x(maze.ncols);
-
-    // if window is too small, limit the printed region of the maze
-    if (max_y > (win_y - 2)) {
-        min_y = p.loc[0] - (win_y - 2) / 2;
-        max_y = win_y < 13 ? 0 : p.loc[0] + (win_y - 2) / 2;
-        r_off = 1 - min_y;
-        if (min_y < 0) {min_y = 0;}
-        if (max_y > maze.nrows) {max_y = maze.nrows;}
-    }
-    if (max_x > (win_x - 2)) {
-        min_x = p.loc[1] - (win_x - 2) / 2;
-        max_x = win_x < 13 ? 0 : p.loc[1] + (win_x - 2) / 2;
-        c_off = 1 - min_x;
-        if (min_x < 0) {min_x = 0;}
-        if (max_x > maze.ncols) {max_x = maze.ncols;}
-    }
+    int min_x, max_x, min_y, max_y, c_off, r_off;
+    get_printing_dimensions(win, maze, p, min_x, max_x, min_y, max_y, r_off, c_off);
 
     clear();
     wclear(win);
