@@ -9,6 +9,7 @@
 #include "menu.h"
 #include "splash.h"
 #include "windows.h"
+#include "maze_window.h"
 
 using namespace std;
 
