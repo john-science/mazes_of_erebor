@@ -2,8 +2,12 @@
 #ifndef STORY_H
 #define STORY_H
 
+#include <string>
+
+
 // declarations
-void success_splash(WINDOW *win, const int count);
-void intro_splash(WINDOW *win);
+std::string build_success_text(const int count);
+const char* gen_intro_text();
+
 
 #endif

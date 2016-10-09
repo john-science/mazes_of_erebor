@@ -1,6 +1,8 @@
 
 #include <ncurses.h>
 
+const int MIN_WINDOW_SIZE(13);
+
 // forward declaration
 WINDOW* init_window();
 void init_maze_window(WINDOW *win, int& win_y, int& win_x);

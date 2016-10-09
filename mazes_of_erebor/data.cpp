@@ -4,13 +4,15 @@
 using namespace std;
 
 
-const int MIN_WINDOW_SIZE(13);
 const int MAX_MAZE_SIZE(71);
 
 
 enum menu_state {menu_main, menu_diff, menu_cont,
                  game_easy, game_medium, game_hard,
                  too_small, quit};
+
+
+enum game_state {game_intro, game_play, game_leveled};
 
 
 struct maze_data {

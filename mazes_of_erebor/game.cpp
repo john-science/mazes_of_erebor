@@ -7,7 +7,7 @@
 #include "data.h"
 #include "maze.h"
 #include "menu.h"
-#include "story.h"
+#include "splash.h"
 #include "windows.h"
 
 using namespace std;

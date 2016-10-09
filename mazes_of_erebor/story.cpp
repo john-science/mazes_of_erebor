@@ -1,25 +1,22 @@
 
 #include <random>
-#include <ncurses.h>
-#include <string.h>
+#include <string>
 #include <vector>
-#include "windows.h"
 
 using namespace std;
 
 // forward declarations
-void content_screen(WINDOW *win, string txt);
-vector<string> format_text(const string txt, unsigned int num_cols);
-void intro_splash(WINDOW *win);
 const char* skewed_choice(const char* arr[], const int length, const int exp=3);
-void success_splash(WINDOW *win, const int count);
+string build_success_text(const int count);
+const char* gen_intro_text();
+
 
 // constants for splash screen
-//const char* splash_exclaim[] = {""};  // Testing content screen bug
-const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
-const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
-//const char* splash_success[] = {"You did it!"};  // Testing content screen bug
-const char* splash_success[] = {"You did it!",
+//static const char* splash_exclaim[] = {""};  // Testing content screen bug
+static const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
+static const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
+//static const char* splash_success[] = {"You did it!"};  // Testing content screen bug
+static const char* splash_success[] = {"You did it!",
                                 "You solved it!",
                                 "You solved the maze!",
                                 "You found a way out!",
@@ -27,10 +24,10 @@ const char* splash_success[] = {"You did it!",
                                 "You found your way through the maze!",
                                 "You are through!",
                                 "You found the end of the laybrinth!"};
-const int n_splash_success = sizeof(splash_success) / sizeof(char *);
+static const int n_splash_success = sizeof(splash_success) / sizeof(char *);
 // TODO: Add more of these
-//const char* splash_story[] = {"You delve deeper."};  // Testing content screen bug
-const char* splash_story[] = {"You delve deeper.",
+//static const char* splash_story[] = {"You delve deeper."};  // Testing content screen bug
+static const char* splash_story[] = {"You delve deeper.",
                               "You take a short rest before taking the staircase down.",
                               "At the end of the maze you find a staircase leading down.",
                               "You find a staircase leading down and follow it.",
@@ -43,8 +40,8 @@ const char* splash_story[] = {"You delve deeper.",
                               "How deep under the mountain do these tunnels go?",
                               "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
                               "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
-const int n_splash_story = sizeof(splash_story) / sizeof(char *);
-const char* intro = "You are Khorin, son of Balin and Rogyr, and you can feel that the fourth "
+static const int n_splash_story = sizeof(splash_story) / sizeof(char *);
+static const char* intro = "You are Khorin, son of Balin and Rogyr, and you can feel that the fourth "
                     "age of the world is drawing to a close. You hail from the the great "
                     "northern city of Annúminas, which your Dwarven ancestors helped rebuild."
                     "\n\nThere are very few Dwarves left in the world. Erebor, their last "
@@ -77,106 +74,21 @@ const char* intro = "You are Khorin, son of Balin and Rogyr, and you can feel th
                     "you break through and enter the catacombs for the first and last time.";
 
 
-/**
- *    Splash screen, for the start of the game
- */
-void intro_splash(WINDOW *win) {
-    content_screen(win, intro);
+const char* gen_intro_text() {
+    return intro;
 }
 
 
 /**
  *    Splash screen, after you finish a maze
  */
-void success_splash(WINDOW *win, const int count) {
+string build_success_text(const int count) {
     string txt(string(skewed_choice(splash_exclaim, n_splash_exclaim)) +
                string(skewed_choice(splash_success, n_splash_success)) + "\n\n" +
                string(skewed_choice(splash_story, n_splash_story)) + "\n\n\n" +
                string("You are now ") + to_string(count) + string(" levels under Erebor."));
 
-    content_screen(win, txt);
-    full_box_clear(win);
-}
-
-
-/**
- *    Format potentially long text for print-out.
- */
-vector<string> format_text(const string txt, unsigned int num_cols) {
-    vector<string> lines;
-    unsigned int i(0);
-    unsigned int last_space(0);
-    unsigned int last_end(0);
-
-    // if the line is short, skip all this work
-    if (txt.length() < num_cols) {
-        lines.push_back(txt);
-        return lines;
-    }
-
-    // loop through each character
-    while (i < txt.length()) {
-        // note the spaces, for clean line breaks
-        if (txt[i] == ' '){
-            last_space = i;
-        }
-
-        // break on EOL and when you are past the column count
-        if (txt[i] == '\n') {
-            lines.push_back(txt.substr(last_end, i - last_end));
-            last_end = i + 1;
-        } else if ((i - last_end) == num_cols) {
-            if (last_end >= last_space) {
-                lines.push_back(txt.substr(last_end, num_cols));
-                last_end += num_cols;
-            } else {
-                lines.push_back(txt.substr(last_end, last_space - last_end));
-                last_end = last_space + 1;
-            }
-        }
-        i += 1;
-    }
-
-    // add last part of string
-    lines.push_back(txt.substr(last_end));
-    return lines;
-}
-
-
-/**
- *    Default function to display text content
- */
-void content_screen(WINDOW *win, string txt) {
-    int win_y(15);
-    int win_x(15);
-    mvwin(win, 0, 0);
-    getmaxyx(stdscr, win_y, win_x);
-    wresize(win, win_y, win_x);
-    wclear(win);
-    box(win, 0, 0);
-
-    if (win_y < 6 || win_x < 12) {return;}
-
-    unsigned int num_rows(win_y - 2);
-    int num_cols(win_x - 4);
-
-    vector<string> lines(format_text(txt, num_cols));
-    unsigned int row(1);
-
-    for (int i=0; i < (int)lines.size(); ++i) {
-        mvprintw(row, 2, lines[i].c_str());  // TODO: Should probably be a vector of const char*
-        row += 1;
-        if (row == num_rows) {
-            row = 1;
-            wrefresh(win);
-            getch();
-            wclear(win);
-            box(win, 0, 0);
-        }
-    }
-
-    wrefresh(win);
-    getch();
+    return txt;
 }
 
 
