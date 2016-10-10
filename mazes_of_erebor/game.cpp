@@ -37,6 +37,10 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
     last_win_y = win_y;
     last_win_x = win_x;
 
+    // select the appropriate print function
+    function<void(WINDOW*, const maze_data, const player_data)> maze_print = \
+        state == game_easy ? maze_print_easy : (state == game_medium ? maze_print_medium : maze_print_hard);
+
     // generate a new maze, if necessary
     if (maze->level == -1) {
         maze->level = 0;
@@ -45,36 +49,43 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
         maze->difficulty = state;
     }
 
-    // select the appropriate print function
-    function<void(WINDOW*, const maze_data, const player_data)> maze_print = \
-        state == game_easy ? maze_print_easy : (state == game_medium ? maze_print_medium : maze_print_hard);
-
-    // game loop
+    // GAME LOOP
+    bool needs_update(true);
     while (true) {
-        player->visited[player->loc[0] * maze->ncols + player->loc[1]] = true;
-        maze_print(win, *maze, *player);
+        // RENDER
+        if (needs_update) {
+            player->visited[player->loc[0] * maze->ncols + player->loc[1]] = true;
+            maze_print(win, *maze, *player);
+            needs_update = false;
+        }
 
-        // input and update
+        // INPUT
         c = wgetch(win);
+
+        // UPDATE 1: key stroke input
         switch (c) {
             case KEY_UP:
                 if (maze_valid_move(*maze, player->loc[0] - 1, player->loc[1])) {
                     player->loc[0] -= 1;
+                    needs_update = true;
                 }
                 break;
             case KEY_DOWN:
                 if (maze_valid_move(*maze, player->loc[0] + 1, player->loc[1])) {
                     player->loc[0] += 1;
+                    needs_update = true;
                 }
                 break;
             case KEY_LEFT:
                 if (maze_valid_move(*maze, player->loc[0], player->loc[1] - 1)) {
                     player->loc[1] -= 1;
+                    needs_update = true;
                 }
                 break;
             case KEY_RIGHT:
                 if (maze_valid_move(*maze, player->loc[0], player->loc[1] + 1)) {
                     player->loc[1] += 1;
+                    needs_update = true;
                 }
                 break;
             case 113:  // q
@@ -86,16 +97,20 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
                     last_win_x = win_x;
                     full_box_resize(win, win_y, win_x);
                 }
+                needs_update = true;
                 break;
             // no default actions to be taken
         }
 
-        // If you reach the end, start over in a new maze
-        if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
-            success_splash(win, maze->level + 2);
-            gen_new_maze(maze);
-            reset_player(player, maze);
-            maze->level += 1;
+        // UPDATE 2: Affects of keystroke input - update game
+        if (needs_update) {
+            // if you reach the end, start over in a new maze
+            if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
+                success_splash(win, maze->level + 2);
+                gen_new_maze(maze);
+                reset_player(player, maze);
+                maze->level += 1;
+            }
         }
     }
 }

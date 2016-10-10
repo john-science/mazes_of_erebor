@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <ncurses.h>
 #include <stack>
 #include <algorithm>
 #include <random>
