@@ -13,6 +13,55 @@
 
 using namespace std;
 
+// forward declarations
+void maze_loop_update(const int c, bool *needs_update, maze_data *maze, player_data *player);
+
+/**
+ *  Master UPDATE for game loop - in maze
+ */
+void maze_loop_update(const int c, bool *needs_update, maze_data *maze, player_data *player) {
+    // UPDATE 1: direct updates
+    switch (c) {
+        case KEY_UP:
+            if (maze_valid_move(*maze, player->loc[0] - 1, player->loc[1])) {
+                player->loc[0] -= 1;
+                *needs_update = true;
+            }
+            break;
+        case KEY_DOWN:
+            if (maze_valid_move(*maze, player->loc[0] + 1, player->loc[1])) {
+                player->loc[0] += 1;
+                *needs_update = true;
+            }
+            break;
+        case KEY_LEFT:
+            if (maze_valid_move(*maze, player->loc[0], player->loc[1] - 1)) {
+                player->loc[1] -= 1;
+                *needs_update = true;
+            }
+            break;
+        case KEY_RIGHT:
+            if (maze_valid_move(*maze, player->loc[0], player->loc[1] + 1)) {
+                player->loc[1] += 1;
+                *needs_update = true;
+            }
+            break;
+        // no default actions to be taken
+    }
+
+    // UPDATE 2: indirect updates
+    if (needs_update) {
+        // if you reach the end, start over in a new maze
+        if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
+            gen_new_maze(maze);
+            reset_player(player, maze);
+            maze->level += 1;
+        }
+
+        player->visited[player->loc[0] * maze->ncols + player->loc[1]] = true;
+    }
+}
+
 
 /**
  *   The game maze GUI.
@@ -23,7 +72,6 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
 {
     maze_data *maze = &d->maze;
     player_data *player = &d->player;
-    int c;
     int win_y(15);
     int win_x(15);
     int last_win_y, last_win_x;
@@ -49,45 +97,25 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
         maze->difficulty = state;
     }
 
-    // GAME LOOP
+    int c;
+    int level(0);
     bool needs_update(true);
+
+    // GAME LOOP
     while (true) {
         // RENDER
+        if (level != maze->level) {
+            level = maze->level;
+            success_splash(win, level + 2);
+        }
         if (needs_update) {
-            player->visited[player->loc[0] * maze->ncols + player->loc[1]] = true;
             maze_print(win, *maze, *player);
             needs_update = false;
         }
 
         // INPUT
         c = wgetch(win);
-
-        // UPDATE 1: key stroke input
         switch (c) {
-            case KEY_UP:
-                if (maze_valid_move(*maze, player->loc[0] - 1, player->loc[1])) {
-                    player->loc[0] -= 1;
-                    needs_update = true;
-                }
-                break;
-            case KEY_DOWN:
-                if (maze_valid_move(*maze, player->loc[0] + 1, player->loc[1])) {
-                    player->loc[0] += 1;
-                    needs_update = true;
-                }
-                break;
-            case KEY_LEFT:
-                if (maze_valid_move(*maze, player->loc[0], player->loc[1] - 1)) {
-                    player->loc[1] -= 1;
-                    needs_update = true;
-                }
-                break;
-            case KEY_RIGHT:
-                if (maze_valid_move(*maze, player->loc[0], player->loc[1] + 1)) {
-                    player->loc[1] += 1;
-                    needs_update = true;
-                }
-                break;
             case 113:  // q
                 return menu_cont;
             case KEY_RESIZE:
@@ -98,19 +126,12 @@ menu_state game_ui(WINDOW *win, game_data *d, menu_state state)
                     full_box_resize(win, win_y, win_x);
                 }
                 needs_update = true;
+                c = -999;
                 break;
             // no default actions to be taken
         }
 
-        // UPDATE 2: Affects of keystroke input - update game
-        if (needs_update) {
-            // if you reach the end, start over in a new maze
-            if (player->loc[0] == maze->finish[0] && player->loc[1] == maze->finish[1]) {
-                success_splash(win, maze->level + 2);
-                gen_new_maze(maze);
-                reset_player(player, maze);
-                maze->level += 1;
-            }
-        }
+        // UPDATE
+        maze_loop_update(c, &needs_update, maze, player);
     }
 }
