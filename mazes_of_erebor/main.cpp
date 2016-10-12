@@ -2,7 +2,7 @@
 #include <random>
 #include <ncurses.h>
 #include "data.h"
-#include "game.h"
+#include "maze_window.h"
 #include "menu.h"
 #include "windows.h"
 
@@ -31,7 +31,7 @@ int main()
         } else if (state == menu_cont) {
             state = cont_menu(win, &data);
         } else if (state == game_easy || state == game_hard || state == game_medium){
-            state = game_ui(win, &data, state);
+            state = game_loop_maze(win, &data, state);
         } else {
             state = quit;
         }

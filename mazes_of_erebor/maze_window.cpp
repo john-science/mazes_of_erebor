@@ -1,16 +1,93 @@
 
 #include <ncurses.h>
+#include <functional>
 #include "data.h"
+#include "game.h"
 #include "windows.h"
+#include "splash.h"
 
 using namespace std;
 
 // forward declarations
+void maze_print_easy(WINDOW *win, const maze_data maze, const player_data player);
+void maze_print_medium(WINDOW *win, const maze_data maze, const player_data player);
+void maze_print_hard(WINDOW *win, const maze_data maze, const player_data player);
 void get_printing_dimensions(WINDOW* win, const maze_data maze, const player_data p, \
                              int& min_x, int& max_x, int& min_y, int& max_y, int& r_off, int& c_off);
 
 
-// TODO: If the window is larger than the maze, we only need to redraw the player, no the maze.
+/**
+ *   The game maze GUI.
+ *
+ *   Use arrow keys to navigate the maze or type "q" to quit.
+ */
+menu_state game_loop_maze(WINDOW *win, game_data *d, menu_state state) {
+    maze_data *maze = &d->maze;
+    player_data *player = &d->player;
+    int win_y(15);
+    int win_x(15);
+    int last_win_y, last_win_x;
+
+    // init window at current resolution
+    if (maze->level == -1) {
+        intro_splash(win);
+    }
+    init_maze_window(win);
+    getmaxyx(stdscr, win_y, win_x);
+    last_win_y = win_y;
+    last_win_x = win_x;
+
+    // select the appropriate print function
+    function<void(WINDOW*, const maze_data, const player_data)> maze_print = \
+        state == game_easy ? maze_print_easy : (state == game_medium ? maze_print_medium : maze_print_hard);
+
+    // generate a new maze, if necessary
+    if (maze->level == -1) {
+        maze_loop_init(maze, player, state);
+    }
+
+    int c;
+    int level(0);
+    bool needs_update(true);
+
+    // GAME LOOP
+    while (true) {
+        // RENDER
+        if (level != maze->level) {
+            level = maze->level;
+            success_splash(win, level + 2);
+        }
+        if (needs_update) {
+            maze_print(win, *maze, *player);
+            needs_update = false;
+        }
+
+        // INPUT
+        c = wgetch(win);
+        switch (c) {
+            case 113:  // q
+                return menu_cont;
+            case KEY_RESIZE:
+                getmaxyx(stdscr, win_y, win_x);
+                if (last_win_x != win_x || last_win_y != win_y) {
+                    last_win_y = win_y;
+                    last_win_x = win_x;
+                    full_box_resize(win, win_y, win_x);
+                }
+                needs_update = true;
+                c = -999;
+                break;
+            // no default actions to be taken
+        }
+
+        // UPDATE
+        maze_loop_update(c, &needs_update, maze, player);
+    }
+}
+
+
+
+// TODO: If the window is larger than the maze, we only need to redraw the player, not the maze.
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,
