@@ -1,4 +1,5 @@
 
+
 #include <ncurses.h>
 
 const int MIN_WINDOW_SIZE(13);

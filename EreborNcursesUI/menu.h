@@ -9,3 +9,4 @@ menu_state diff_menu(WINDOW *menu_win);
 menu_state cont_menu(WINDOW *win, game_data *data);
 
 #endif
+

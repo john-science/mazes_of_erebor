@@ -205,3 +205,4 @@ void gen_new_maze(maze_data *maze) {
     backtracking_maze_gen(maze);
     gen_entrances_opposites(maze);
 }
+

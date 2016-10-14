@@ -11,3 +11,4 @@ void full_box_clear(WINDOW *win);
 void full_box_resize(WINDOW *win, int win_y, int win_x);
 
 #endif
+

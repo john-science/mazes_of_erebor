@@ -1,4 +1,5 @@
 
+
 #include <random>
 #include <ncurses.h>
 #include <string.h>
@@ -6,8 +7,6 @@
 #include "data.h"
 #include "maze.h"
 #include "menu.h"
-#include "windows.h"
-#include "maze_window.h"
 
 using namespace std;
 

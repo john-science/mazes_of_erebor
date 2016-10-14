@@ -237,3 +237,4 @@ static void print_menu(WINDOW *win, const int highlight, char const **choices, c
     refresh();
     wrefresh(win);
 }
+
