@@ -2,15 +2,32 @@
 #ifndef MAZE_H
 #define MAZE_H
 
-#include "data.h"
 
-// TODO: Move MazeData class definition here.
+const int MAX_MAZE_SIZE(71);
 
-bool maze_get(const MazeData maze, const int row, const int col);
-void maze_set(MazeData *maze, const int row, const int col, const bool value);
-int* find_neighbor(const MazeData maze, const int row, const int col, int result[]);
-bool maze_valid_move(const MazeData maze, const int r, const int c);
-void gen_new_maze(MazeData *maze);
-void backtracking_maze_gen(MazeData *maze);  // TODO: Move to an algorithms.cpp
+
+class Maze {
+public:
+    // public attributes
+    // TODO: Most of these should be private
+    int nrows;
+    int ncols;
+    bool *grid;
+    int level;
+    int start[2];
+    int finish[2];
+    // public methods
+    Maze();  // standard initializer
+    bool get(int, int) const;
+    void set(int, int, bool);
+    int* find_neighbor(const int row, const int col, int result[]) const;
+    bool is_valid_move(const int, const int) const;
+    void gen_new();
+private:
+    void backtracking_gen();
+    void get_new_dims();
+    void gen_entrances_opposites();
+};
+
 
 #endif

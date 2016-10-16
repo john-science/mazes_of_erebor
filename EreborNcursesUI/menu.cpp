@@ -156,7 +156,7 @@ menu_state cont_menu(WINDOW *win, GameData *data)
             data->maze.level = -1;
             return menu_diff;
         } else if (choice == 2) {
-            return data->maze.difficulty;
+            return data->difficulty;
         } else if (choice == 3) {
             return quit;
         }
