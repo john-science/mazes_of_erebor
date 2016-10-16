@@ -19,33 +19,38 @@ enum menu_state {menu_main, menu_diff, menu_cont,
 enum game_state {game_intro, game_play, game_leveled};
 
 
-struct maze_data {
-    int nrows = 19;
-    int ncols = 31;
-    bool *grid = new bool[nrows * ncols];
-    int level = -1;
+class MazeData {
+public:
+    MazeData();  // standard initializer
+    int nrows;
+    int ncols;
+    bool *grid;
+    int level;
     menu_state difficulty = game_easy;
-    int start[2] = {1, 1};
-    int finish[2] = {1, 1};
+    int start[2];
+    int finish[2];
 };
 
 
-struct player_data {
-    int loc[2] = {1, 1};
-    string name = "Khorin";
-    string parent1 = "Balin";  // dwarf
-    string parent2 = "Rogyr";  // human
-    bool *visited = new bool[1];
+class PlayerData {
+public:
+    PlayerData();
+    int loc[2];
+    string name;
+    string parent1;  // dwarf
+    string parent2;  // human
+    bool *visited;
 };
 
 
-struct game_data {
-    maze_data maze;
-    player_data player;
+class GameData {
+public:
+    GameData();
+    MazeData maze;
+    PlayerData player;
+
+    void restart_level();
 };
 
-
-void reset_player(player_data *player, maze_data *maze);
 
 #endif
-

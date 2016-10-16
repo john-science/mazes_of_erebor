@@ -34,7 +34,15 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="data.cpp" />
+		<Unit filename="data.h" />
+		<Unit filename="game.cpp" />
+		<Unit filename="game.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="maze.cpp" />
+		<Unit filename="maze.h" />
+		<Unit filename="story.cpp" />
+		<Unit filename="story.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

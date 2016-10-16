@@ -33,6 +33,14 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="maze_window.cpp" />
+		<Unit filename="maze_window.h" />
+		<Unit filename="menu.cpp" />
+		<Unit filename="menu.h" />
+		<Unit filename="splash.cpp" />
+		<Unit filename="splash.h" />
+		<Unit filename="windows.cpp" />
+		<Unit filename="windows.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

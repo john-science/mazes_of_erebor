@@ -9,15 +9,15 @@ using namespace std;
 
 // forward declarations
 static void get_new_dims(int& nrows, int& ncols, int level);
-void backtracking_maze_gen(maze_data *maze);
-void gen_entrances_opposites(maze_data *maze);
+void backtracking_maze_gen(MazeData *maze);
+void gen_entrances_opposites(MazeData *maze);
 
 
 /**
     Get an element from the maze array.
     (This handles the math to treat a 1D array as a 2D array.)
 */
-bool maze_get(const maze_data maze, const int row, const int col)
+bool maze_get(const MazeData maze, const int row, const int col)
 {
     return maze.grid[col + row * maze.ncols];
 }
@@ -27,7 +27,7 @@ bool maze_get(const maze_data maze, const int row, const int col)
     Set an element from the maze array.
     (This handles the math to treat a 1D array as a 2D array.)
 */
-void maze_set(maze_data *maze, const int row, const int col, const bool value)
+void maze_set(MazeData *maze, const int row, const int col, const bool value)
 {
     maze->grid[col + row * maze->ncols] = value;
 }
@@ -36,7 +36,7 @@ void maze_set(maze_data *maze, const int row, const int col, const bool value)
 /**
     Find a random, un-opened neighbor of a maze cell.
 */
-int* find_neighbor(const maze_data maze, const int row, const int col, int result[])
+int* find_neighbor(const MazeData maze, const int row, const int col, int result[])
 {
     int order[4] = {0, 1, 2, 3};
     result[0] = -999;
@@ -78,7 +78,7 @@ int* find_neighbor(const maze_data maze, const int row, const int col, int resul
 /**
     Generate a maze using the backtracking algorithm.
 */
-void backtracking_maze_gen(maze_data *maze)
+void backtracking_maze_gen(MazeData *maze)
 {
     int row, col, r, c;
     int neighbor[2] = {-999, -999};
@@ -123,7 +123,7 @@ void backtracking_maze_gen(maze_data *maze)
 /**
     Generate random maze start/finish positions.
 */
-void gen_entrances_opposites(maze_data *maze)
+void gen_entrances_opposites(MazeData *maze)
 {
     int wall;
     wall = rand() % 4;
@@ -164,7 +164,7 @@ void gen_entrances_opposites(maze_data *maze)
 /**
  *  Determine if a particular grid cell is a valid move.
  */
-bool maze_valid_move(const maze_data maze, int r, int c) {
+bool maze_valid_move(const MazeData maze, int r, int c) {
     if (r < 0 || c < 0) {
         return false;
     } else if (r >= maze.nrows) {
@@ -198,7 +198,7 @@ static void get_new_dims(int& nrows, int& ncols, int level) {
 /**
  *   Pull everything together and generate a new maze.
  */
-void gen_new_maze(maze_data *maze) {
+void gen_new_maze(MazeData *maze) {
     get_new_dims(maze->nrows, maze->ncols, maze->level);
     delete[] maze->grid;
     maze->grid = new bool[maze->nrows * maze->ncols];

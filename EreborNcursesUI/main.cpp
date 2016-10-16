@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <random>
 #include <ncurses.h>
 #include "data.h"
@@ -16,8 +17,10 @@ int main()
     keypad(win, TRUE);
     srand(time(0));
 
+    std::cout << "beep 1" << std::endl;
+
     // create a default game data object
-    game_data data;
+    GameData data;
 
     // FSM state
     menu_state state = menu_main;

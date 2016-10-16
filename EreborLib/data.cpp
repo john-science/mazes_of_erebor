@@ -1,55 +1,102 @@
 
-
 #include <string>
+#include "data.h"
 
 using namespace std;
 
-
+/**
 const int MAX_MAZE_SIZE(71);
 
 
+// TODO: break into game states and menu states (which can be in the other project)
 enum menu_state {menu_main, menu_diff, menu_cont,
                  game_easy, game_medium, game_hard,
                  too_small, quit};
 
 
 enum game_state {game_intro, game_play, game_leveled};
+*/
 
-
-struct maze_data {
-    int nrows = 19;
-    int ncols = 31;
-    bool *grid = new bool[nrows * ncols];
-    int level = -1;
-    menu_state difficulty = game_easy;
-    int start[2] = {1, 1};
-    int finish[2] = {1, 1};
+// http://stackoverflow.com/a/865972/1287593
+// TODO: Make a lot more of these things private.
+/**
+class MazeData {
+public:
+    MazeData();  // standard initializer
+    int nrows;
+    int ncols;
+    bool *grid;
+    int level;
+    menu_state difficulty;
+    int start[2];
+    int finish[2];
 };
+*/
 
 
-struct player_data {
-    int loc[2] = {1, 1};
-    string name = "Khorin";
-    string parent1 = "Balin";  // dwarf
-    string parent2 = "Rogyr";  // human
-    bool *visited = new bool[1];
+MazeData::MazeData() {
+    nrows = 19;
+    ncols = 31;
+    grid = new bool[nrows * ncols];
+    level = -1;
+    difficulty = game_easy;
+    start[0] = 1;
+    start[1] = 1;
+    finish[0] = 1;
+    finish[1] = 1;
+}
+
+/**
+class PlayerData {
+public:
+    PlayerData();
+    int loc[2];
+    string name;
+    string parent1;  // dwarf
+    string parent2;  // human
+    bool *visited;
 };
+*/
 
 
-struct game_data {
-    maze_data maze;
-    player_data player;
+PlayerData::PlayerData() {
+    loc[0] = 1;
+    loc[1] = 1;
+    name = "Khorin";
+    parent1 = "Balin";  // dwarf
+    parent2 = "Rogyr";  // human
+    visited = new bool[1];
+}
+
+
+/**
+class GameData {
+public:
+    GameData();
+    MazeData maze;
+    PlayerData player;
+
+    void restart_level();
 };
+*/
+
+
+GameData::GameData() {
+    maze.level = -1;  // TODO: Just to have something here...
+    //maze = MazeData();
+    //player = PlayerData();
+}
 
 
 /**
  *   Init the maze and player location
  */
-void reset_player(player_data *player, maze_data *maze) {
-    delete[] player->visited;
-    player->visited = new bool[maze->nrows * maze->ncols];
-    std::fill_n(player->visited, maze->nrows * maze->ncols, false);
-    player->visited[maze->finish[0] * maze->ncols + maze->finish[1]] = true;
-    player->loc[0] = maze->start[0];
-    player->loc[1] = maze->start[1];
+void GameData::restart_level() {
+    // reset player
+    delete[] player.visited;
+    player.visited = new bool[maze.nrows * maze.ncols];
+    std::fill_n(player.visited, maze.nrows * maze.ncols, false);
+    player.visited[maze.finish[0] * maze.ncols + maze.finish[1]] = true;
+    player.loc[0] = maze.start[0];
+    player.loc[1] = maze.start[1];
 }

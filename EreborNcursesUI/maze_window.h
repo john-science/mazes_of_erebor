@@ -4,10 +4,10 @@
 
 #include "data.h"
 
-void maze_print_easy(WINDOW *win, const maze_data maze, const player_data player);
-void maze_print_medium(WINDOW *win, const maze_data maze, const player_data player);
-void maze_print_hard(WINDOW *win, const maze_data maze, const player_data player);
-menu_state game_loop_maze(WINDOW *win, game_data *d, menu_state state);
+void maze_print_easy(WINDOW*, const GameData);
+void maze_print_medium(WINDOW*, const GameData);
+void maze_print_hard(WINDOW*, const GameData);
+menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state);
 
 #endif
 

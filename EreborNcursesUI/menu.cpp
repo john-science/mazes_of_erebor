@@ -9,7 +9,7 @@ static void print_menu(WINDOW *win, const int highlight, char const **choices, c
 static void menu_header(WINDOW *win, string header, const int win_width, const int row=1);
 menu_state main_menu(WINDOW *win);
 menu_state diff_menu(WINDOW *win);
-menu_state cont_menu(WINDOW *win, game_data *data);
+menu_state cont_menu(WINDOW *win, GameData *data);
 
 
 /**
@@ -116,7 +116,7 @@ menu_state main_menu(WINDOW *win)
 /**
  *  Menu: main menu with Continue option
  */
-menu_state cont_menu(WINDOW *win, game_data *data)
+menu_state cont_menu(WINDOW *win, GameData *data)
 {
     char const *choices[] = {"Start New", "Continue", "Quit"};
     int n_choices = sizeof(choices) / sizeof(char *);
