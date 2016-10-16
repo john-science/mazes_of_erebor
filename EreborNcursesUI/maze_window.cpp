@@ -44,7 +44,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
     }
 
     int c;
-    int level(0);  // TODO: This doesn't account for the continue state (after the first level)
+    int level(d->maze.level);
     bool needs_update(true);
 
     // GAME LOOP
