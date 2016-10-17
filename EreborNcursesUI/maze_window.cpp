@@ -109,7 +109,7 @@ void maze_print_easy(WINDOW *win, const GameData d)
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, "X");  // finish
                 wattroff(win, COLOR_PAIR(6));
-            } else if (!d.maze.grid[c + r * d.maze.ncols]) {
+            } else if (!d.maze.get(r, c)) {
                 wattron(win, COLOR_PAIR(6));
                 mvwprintw(win, r + r_off, c + c_off, " ");  // hallway
                 wattroff(win, COLOR_PAIR(6));
@@ -147,50 +147,50 @@ void maze_print_medium(WINDOW *win, const GameData d)
     // try going East
     r = d.player.loc[0];
     c = d.player.loc[1];
-    while (c < (d.maze.ncols - 1) && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (c < (d.maze.ncols - 1) && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (r < (d.maze.nrows - 1)) {
-            if (!d.maze.grid[(r + 1) * d.maze.ncols + c]) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r + 1, c)) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!d.maze.grid[(r - 1) * d.maze.ncols + c]) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r - 1, c)) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
         }
         c += 1;
     }
     // try going West
     c = d.player.loc[1];
-    while (c > 0 && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (c > 0 && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (r < (d.maze.nrows - 1)) {
-            if (!d.maze.grid[(r + 1) * d.maze.ncols + c]) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r + 1, c)) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!d.maze.grid[(r - 1) * d.maze.ncols + c]) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r - 1, c)) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
         }
         c -= 1;
     }
     // try going North
     r = d.player.loc[0];
     c = d.player.loc[1];
-    while (r < (d.maze.nrows - 1) && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (r < (d.maze.nrows - 1) && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (c < (d.maze.ncols - 1)) {
-            if (!d.maze.grid[r * d.maze.ncols + c + 1]) {grid[r * d.maze.ncols + c + 1] = open_hall;}
+            if (!d.maze.get(r, c + 1)) {grid[r * d.maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!d.maze.grid[r * d.maze.ncols + c - 1]) {grid[r * d.maze.ncols + c - 1] = open_hall;}
+            if (!d.maze.get(r, c - 1)) {grid[r * d.maze.ncols + c - 1] = open_hall;}
         }
         r += 1;
     }
     // try going South
     r = d.player.loc[0];
-    while (r > 0 && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (r > 0 && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (c < (d.maze.ncols - 1)) {
-            if (!d.maze.grid[r * d.maze.ncols + c + 1]) {grid[r * d.maze.ncols + c + 1] = open_hall;}
+            if (!d.maze.get(r, c + 1)) {grid[r * d.maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!d.maze.grid[r * d.maze.ncols + c - 1]) {grid[r * d.maze.ncols + c - 1] = open_hall;}
+            if (!d.maze.get(r, c - 1)) {grid[r * d.maze.ncols + c - 1] = open_hall;}
         }
         r -= 1;
     }
@@ -255,50 +255,50 @@ void maze_print_hard(WINDOW *win, const GameData d)
     // try going East
     r = d.player.loc[0];
     c = d.player.loc[1];
-    while (c < (d.maze.ncols - 1) && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (c < (d.maze.ncols - 1) && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (r < (d.maze.nrows - 1)) {
-            if (!d.maze.grid[(r + 1) * d.maze.ncols + c]) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r + 1, c)) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!d.maze.grid[(r - 1) * d.maze.ncols + c]) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r - 1, c)) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
         }
         c += 1;
     }
     // try going West
     c = d.player.loc[1];
-    while (c > 0 && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (c > 0 && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (r < (d.maze.nrows - 1)) {
-            if (!d.maze.grid[(r + 1) * d.maze.ncols + c]) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r + 1, c)) {grid[(r + 1) * d.maze.ncols + c] = open_hall;}
         }
         if (r > 0) {
-            if (!d.maze.grid[(r - 1) * d.maze.ncols + c]) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
+            if (!d.maze.get(r - 1, c)) {grid[(r - 1) * d.maze.ncols + c] = open_hall;}
         }
         c -= 1;
     }
     // try going North
     r = d.player.loc[0];
     c = d.player.loc[1];
-    while (r < (d.maze.nrows - 1) && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (r < (d.maze.nrows - 1) && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (c < (d.maze.ncols - 1)) {
-            if (!d.maze.grid[r * d.maze.ncols + c + 1]) {grid[r * d.maze.ncols + c + 1] = open_hall;}
+            if (!d.maze.get(r, c + 1)) {grid[r * d.maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!d.maze.grid[r * d.maze.ncols + c - 1]) {grid[r * d.maze.ncols + c - 1] = open_hall;}
+            if (!d.maze.get(r, c - 1)) {grid[r * d.maze.ncols + c - 1] = open_hall;}
         }
         r += 1;
     }
     // try going South
     r = d.player.loc[0];
-    while (r > 0 && !d.maze.grid[r * d.maze.ncols + c]) {
+    while (r > 0 && !d.maze.get(r, c)) {
         grid[r * d.maze.ncols + c] = open_hall;
         if (c < (d.maze.ncols - 1)) {
-            if (!d.maze.grid[r * d.maze.ncols + c + 1]) {grid[r * d.maze.ncols + c + 1] = open_hall;}
+            if (!d.maze.get(r, c + 1)) {grid[r * d.maze.ncols + c + 1] = open_hall;}
         }
         if (c > 0) {
-            if (!d.maze.grid[r * d.maze.ncols + c - 1]) {grid[r * d.maze.ncols + c - 1] = open_hall;}
+            if (!d.maze.get(r, c - 1)) {grid[r * d.maze.ncols + c - 1] = open_hall;}
         }
         r -= 1;
     }

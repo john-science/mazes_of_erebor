@@ -8,15 +8,14 @@ const int MAX_MAZE_SIZE(71);
 
 class Maze {
 public:
-    // public attributes
+    // attributes
     // TODO: Most of these should be private
     int nrows;
     int ncols;
-    bool *grid;
     int level;
     int start[2];
     int finish[2];
-    // public methods
+    // methods
     Maze();  // standard initializer
     bool get(int, int) const;
     void set(int, int, bool);
@@ -24,6 +23,9 @@ public:
     bool is_valid_move(const int, const int) const;
     void gen_new();
 private:
+    // attributes
+    bool *grid;
+    // methods
     void backtracking_gen();
     void get_new_dims();
     void gen_entrances_opposites();
