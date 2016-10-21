@@ -3,6 +3,7 @@
 #define DATA_H
 
 #include <string>
+#include "player.h"
 #include "maze.h"
 
 using namespace std;
@@ -15,17 +16,6 @@ enum menu_state {menu_main, menu_diff, menu_cont,
 
 
 enum game_state {game_intro, game_play, game_leveled};
-
-
-class PlayerData {
-public:
-    PlayerData();
-    int loc[2];
-    string name;
-    string parent1;  // dwarf
-    string parent2;  // human
-    bool *visited;
-};
 
 
 class GameData {

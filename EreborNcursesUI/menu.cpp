@@ -5,6 +5,7 @@
 #include "data.h"
 #include "windows.h"
 
+
 static void print_menu(WINDOW *win, const int highlight, char const **choices, const int n_choices, const int win_y, const int win_x, string header);
 static void menu_header(WINDOW *win, string header, const int win_width, const int row=1);
 menu_state main_menu(WINDOW *win);

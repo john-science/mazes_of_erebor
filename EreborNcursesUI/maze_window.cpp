@@ -27,7 +27,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
 
     // init window at current resolution
     if (d->maze.level == -1) {
-        intro_splash(win);
+        intro_splash(win, d->player);
     }
     init_maze_window(win);
     getmaxyx(stdscr, win_y, win_x);

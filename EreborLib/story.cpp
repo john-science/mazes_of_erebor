@@ -2,13 +2,14 @@
 #include <random>
 #include <string>
 #include <vector>
+#include "player.h"
 
 using namespace std;
 
 // forward declarations
 const char* skewed_choice(const char* arr[], const int length, const int exp=3);
-string build_success_text(const int count);
-const char* gen_intro_text();
+string build_success_text(const int);
+string gen_intro_text(PlayerData);
 
 
 // constants for splash screen
@@ -41,7 +42,7 @@ static const char* splash_story[] = {"You delve deeper.",
                               "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
                               "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
 static const int n_splash_story = sizeof(splash_story) / sizeof(char *);
-static const char* intro = "You are Khorin, son of Balin and Rogyr, and you can feel that the fourth "
+static const char* intro = ", and you can feel that the fourth "
                     "age of the world is drawing to a close. You hail from the the great "
                     "northern city of Annúminas, which your Dwarven ancestors helped rebuild."
                     "\n\nThere are very few Dwarves left in the world. Erebor, their last "
@@ -74,8 +75,13 @@ static const char* intro = "You are Khorin, son of Balin and Rogyr, and you can 
                     "you break through and enter the catacombs for the first and last time.";
 
 
-const char* gen_intro_text() {
-    return intro;
+/**
+ *  Mostly static game intro.
+ */
+string gen_intro_text(PlayerData p) {
+    string txt(string("You are ") + p.name + string(" son of ") + p.parent1 + string(" and ") +
+               p.parent2 + string(intro));
+    return txt;
 }
 
 

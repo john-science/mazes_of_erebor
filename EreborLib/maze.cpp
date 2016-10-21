@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include <stack>
 #include <algorithm>
 #include <random>
@@ -11,12 +10,12 @@ using namespace std;
 Maze::Maze() {
     nrows = 19;
     ncols = 31;
-    grid = new bool[nrows * ncols];
     level = -1;
     start[0] = 1;
     start[1] = 1;
     finish[0] = 1;
     finish[1] = 1;
+    grid = new bool[nrows * ncols];
 }
 
 
@@ -99,8 +98,8 @@ bool Maze::is_valid_move(const int r, const int c) const {
 
 
 /**
-    Generate a maze using the backtracking algorithm.
-*/
+ *  Generate a maze using the backtracking algorithm.
+ */
 void Maze::backtracking_gen() {
     int row, col, r, c;
     int neighbor[2] = {-999, -999};

@@ -5,16 +5,6 @@
 using namespace std;
 
 
-PlayerData::PlayerData() {
-    loc[0] = 1;
-    loc[1] = 1;
-    name = "Khorin";
-    parent1 = "Balin";  // dwarf
-    parent2 = "Rogyr";  // human
-    visited = new bool[1];
-}
-
-
 GameData::GameData() {
     difficulty = game_easy;
 }

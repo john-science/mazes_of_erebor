@@ -22,6 +22,7 @@ void maze_loop_init(GameData *game, const menu_state state) {
     game->maze.gen_new();
     game->restart_level();
     game->difficulty = state;
+    game->player.reset_names();
     game->player.visited[game->maze.start[0] * game->maze.ncols + game->maze.start[1]] = true;
 }
 

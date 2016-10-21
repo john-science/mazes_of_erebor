@@ -5,6 +5,7 @@
 #include <vector>
 #include "windows.h"
 #include "story.h"
+#include "player.h"
 
 
 using namespace std;
@@ -12,15 +13,15 @@ using namespace std;
 // forward declarations
 vector<string> format_text(const string txt, unsigned int num_cols);
 void content_screen(WINDOW *win, string txt);
-void intro_splash(WINDOW *win);
+void intro_splash(WINDOW *win, PlayerData p);
 void success_splash(WINDOW *win, const int count);
 
 
 /**
  *    Splash screen, for the start of the game
  */
-void intro_splash(WINDOW *win) {
-    content_screen(win, gen_intro_text());
+void intro_splash(WINDOW *win, PlayerData p) {
+    content_screen(win, gen_intro_text(p));
 }
 
 
