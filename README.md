@@ -10,10 +10,12 @@ Each branch of this repository has an increasingly fun game.  And for each branc
 
 ### The Game - This Branch
 
-Navigate a nearly infinite number of unique mazes.
+Navigate the great catacomb mazes under the Dwarf kingdom of Erebor. Each time you solve one maze, you can read the (procedurally generated) engravings of Dwarven history above the stairwell that leads down to the next maze. As a Dwarf, you will learn much about from these engravings; including why you are delving into these tombs.
 
-1. Run the program and a maze is printed to an `ncurses` window.
-2. Select your maze difficulty.
-3. Use arrow keys to naviage your maze.
-4. When you read the end of a maze you will find yourself in a newer, larger maze.
-5. Type `q` to quit.
+Each maze is unique and created just for you.
+
+1. Select your game difficulty.
+2. Story Intro
+3. Use arrow keys to navigate the maze.
+4. At the end of each maze will be a stairwell down, engraved with the history of Tolkien's Dwarves. Try to gather hints about the goal of the game.
+5. Type 'q' to quit, or reach the bottom of the mountain and win the game.
