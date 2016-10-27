@@ -25,7 +25,7 @@ menu_state diff_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");
+    print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");  // TODO: Constant
 
     while (true) {
         // input and update
@@ -53,7 +53,7 @@ menu_state diff_menu(WINDOW *win)
             // no default actions to be taken
         }
         // display
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");  // TODO: Constant
         // update
         if (choice == 1) {
             return game_easy;
@@ -78,7 +78,7 @@ menu_state main_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");
+    print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
 
     while (true) {
         c = wgetch(win);
@@ -104,7 +104,7 @@ menu_state main_menu(WINDOW *win)
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
         if (choice == 1) {
             return menu_diff;
         } else if (choice == 2) {
@@ -152,7 +152,7 @@ menu_state cont_menu(WINDOW *win, GameData *data)
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
         if (choice == 1) {
             data->maze.level = -1;
             return menu_diff;

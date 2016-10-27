@@ -12,7 +12,7 @@ FILES_UI = splash.o menu.o windows.o maze_window.o
 EXE_PATH = erebor
 
 
-erebor: build
+erebor: build clean_post
 
 .PHONY: build
 build: build_static_lib build_ui build_exe

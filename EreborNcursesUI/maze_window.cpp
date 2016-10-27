@@ -52,7 +52,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
         // RENDER
         if (level != d->maze.level) {
             level = d->maze.level;
-            success_splash(win, level + 2);
+            success_splash(win, level + 1);
         }
         if (needs_update) {
             maze_print(win, *d);
@@ -350,7 +350,6 @@ void maze_print_hard(WINDOW *win, const GameData d)
 }
 
 
-// TODO: This could take a GameData instead...
 /**
  *  Get the limits of the maze printing region,
  *  and check for the case where the maze is bigger than the screen.
