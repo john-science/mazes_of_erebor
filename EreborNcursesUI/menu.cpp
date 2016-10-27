@@ -179,7 +179,6 @@ static void menu_header(WINDOW *win, string header, const int win_width, const i
 }
 
 
-// TODO: Too many arguments. This should be in a class.
 /**
  *  Print a simple menu window
  */

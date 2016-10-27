@@ -9,7 +9,6 @@
 using namespace std;
 
 
-// TODO: Does this belong in data, or in menu?
 enum menu_state {menu_main, menu_diff, menu_cont,
                  game_easy, game_medium, game_hard,
                  too_small, quit};

@@ -9,7 +9,6 @@ const int MAX_MAZE_SIZE(71);
 class Maze {
 public:
     // attributes
-    // TODO: Most of these should be private
     int nrows;
     int ncols;
     int level;

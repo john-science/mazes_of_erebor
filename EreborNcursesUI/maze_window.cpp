@@ -27,7 +27,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
 
     // init window at current resolution
     if (d->maze.level == -1) {
-        intro_splash(win, d->player);
+        intro_splash(win);
     }
     init_maze_window(win);
     getmaxyx(stdscr, win_y, win_x);
@@ -52,7 +52,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
         // RENDER
         if (level != d->maze.level) {
             level = d->maze.level;
-            success_splash(win, level + 2);
+            success_splash(win, level + 1);
         }
         if (needs_update) {
             maze_print(win, *d);
@@ -84,7 +84,6 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
 
 
 
-// TODO: If the window is larger than the maze, we only need to redraw the player, not the maze.
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,
@@ -350,7 +349,6 @@ void maze_print_hard(WINDOW *win, const GameData d)
 }
 
 
-// TODO: This could take a GameData instead...
 /**
  *  Get the limits of the maze printing region,
  *  and check for the case where the maze is bigger than the screen.

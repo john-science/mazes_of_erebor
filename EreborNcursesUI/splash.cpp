@@ -13,15 +13,15 @@ using namespace std;
 // forward declarations
 vector<string> format_text(const string txt, unsigned int num_cols);
 void content_screen(WINDOW *win, string txt);
-void intro_splash(WINDOW *win, PlayerData p);
+void intro_splash(WINDOW *win);
 void success_splash(WINDOW *win, const int count);
 
 
 /**
  *    Splash screen, for the start of the game
  */
-void intro_splash(WINDOW *win, PlayerData p) {
-    content_screen(win, gen_intro_text(p));
+void intro_splash(WINDOW *win) {
+    content_screen(win, gen_intro_text());
 }
 
 
@@ -34,7 +34,6 @@ void success_splash(WINDOW *win, const int count) {
 }
 
 
-// TODO: Change name to full_window_text
 /**
  *    Default function to display text content
  */
@@ -53,10 +52,10 @@ void content_screen(WINDOW *win, string txt) {
     int num_cols(win_x - 4);
 
     vector<string> lines(format_text(txt, num_cols));
-    unsigned int row(1);
+    unsigned int row(win_y / 2 > 1 ? win_y / 2 : 1);
 
     for (int i=0; i < (int)lines.size(); ++i) {
-        mvprintw(row, 2, lines[i].c_str());  // TODO: Should probably be a vector of const char*
+        mvprintw(row, 2, lines[i].c_str());
         row += 1;
         if (row == num_rows) {
             row = 1;
