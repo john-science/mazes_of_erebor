@@ -13,34 +13,31 @@ string gen_intro_text(PlayerData);
 
 
 // constants for splash screen
-//static const char* splash_exclaim[] = {""};  // Testing content screen bug
 static const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 static const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
-//static const char* splash_success[] = {"You did it!"};  // Testing content screen bug
 static const char* splash_success[] = {"You did it!",
-                                "You solved it!",
-                                "You solved the maze!",
-                                "You found a way out!",
-                                "You are through the maze!",
-                                "You found your way through the maze!",
-                                "You are through!",
-                                "You found the end of the laybrinth!"};
+                                        "You solved it!",
+                                        "You solved the maze!",
+                                        "You found a way out!",
+                                        "You are through the maze!",
+                                        "You found your way through the maze!",
+                                        "You are through!",
+                                        "You found the end of the laybrinth!"};
 static const int n_splash_success = sizeof(splash_success) / sizeof(char *);
-// TODO: Add more of these
-//static const char* splash_story[] = {"You delve deeper."};  // Testing content screen bug
 static const char* splash_story[] = {"You delve deeper.",
-                              "You take a short rest before taking the staircase down.",
-                              "At the end of the maze you find a staircase leading down.",
-                              "You find a staircase leading down and follow it.",
-                              "Deeper and deeper into the Halls of the Mountain King...",
-                              "Your torch flickers in a draft as you head down the stairs.",
-                              "You hear the echoes of war drums far off in the distance.",
-                              "You find a curving ramp leading further down into the mountain.",
-                              "You find a narrow staircase leading down into the mountain.",
-                              "You kick over a dusty old pile of Orcish remains that block the staircase.",
-                              "How deep under the mountain do these tunnels go?",
-                              "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
-                              "Engraved along the walls of the spiral staircase are scenes of a dwarf being buried with a glowing gem."};
+                                      "You take a short rest before taking the staircase down.",
+                                      "At the end of the maze you find a staircase leading down.",
+                                      "You find a staircase leading down and follow it.",
+                                      "Deeper and deeper into the Halls of the Mountain King...",
+                                      "Your torch flickers in a draft as you head down the stairs.",
+                                      "You hear the echoes of war drums far off in the distance.",
+                                      "You find a curving ramp leading further down into the mountain.",
+                                      "You find a narrow staircase leading down into the mountain.",
+                                      "You kick over a dusty old pile of Orcish remains that block the staircase.",
+                                      "How deep under the mountain do these tunnels go?",
+                                      "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
+                                      "Engraved along the walls of the spiral staircase are "
+                                      "scenes of a dwarf being buried with a glowing gem."};
 static const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 static const char* intro = ", and you can feel that the fourth "
                     "age of the world is drawing to a close. You hail from the the great "
@@ -107,4 +104,3 @@ const char* skewed_choice(const char* arr[], const int length, const int exp) {
     float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
     return arr[(int)(length * pow(r, exp))];
 }
-

@@ -1,5 +1,4 @@
 
-
 #include <random>
 #include <ncurses.h>
 #include <string.h>
@@ -72,4 +71,3 @@ void maze_loop_update(const int c, bool *needs_update, GameData *game) {
         game->player.visited[game->player.loc[0] * game->maze.ncols + game->player.loc[1]] = true;
     }
 }
-

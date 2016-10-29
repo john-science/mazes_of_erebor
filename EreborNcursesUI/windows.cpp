@@ -1,8 +1,5 @@
 
-
 #include <ncurses.h>
-
-const int MIN_WINDOW_SIZE(13);
 
 // forward declaration
 WINDOW* init_window();

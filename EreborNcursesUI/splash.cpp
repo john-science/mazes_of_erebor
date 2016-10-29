@@ -1,5 +1,4 @@
 
-
 #include <ncurses.h>
 #include <string>
 #include <vector>
@@ -39,8 +38,8 @@ void success_splash(WINDOW *win, const int count) {
  *    Default function to display text content
  */
 void content_screen(WINDOW *win, string txt) {
-    int win_y(15);
-    int win_x(15);
+    int win_y(1);
+    int win_x(1);
     mvwin(win, 0, 0);
     getmaxyx(stdscr, win_y, win_x);
     wresize(win, win_y, win_x);
@@ -77,15 +76,10 @@ void content_screen(WINDOW *win, string txt) {
  */
 vector<string> format_text(const string txt, unsigned int num_cols) {
     vector<string> lines;
+    string line;
     unsigned int i(0);
     unsigned int last_space(0);
     unsigned int last_end(0);
-
-    // if the line is short, skip all this work
-    if (txt.length() < num_cols) {
-        lines.push_back(txt);
-        return lines;
-    }
 
     // loop through each character
     while (i < txt.length()) {

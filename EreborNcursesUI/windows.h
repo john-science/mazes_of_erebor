@@ -2,6 +2,7 @@
 #ifndef WINDOWS_H
 #define WINDOWS_H
 
+// constants
 const int MIN_WINDOW_SIZE(13);
 
 // forward declaration
@@ -11,4 +12,3 @@ void full_box_clear(WINDOW *win);
 void full_box_resize(WINDOW *win, int win_y, int win_x);
 
 #endif
-
