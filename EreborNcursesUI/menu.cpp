@@ -5,7 +5,11 @@
 #include "data.h"
 #include "windows.h"
 
+// constants
+static const char* title_diff = "May you live in interesting times.";
+static const char* title_main = "The Halls of Erebor";
 
+// forward declarations
 static void print_menu(WINDOW *win, const int highlight, char const **choices, const int n_choices, const int win_y, const int win_x, string header);
 static void menu_header(WINDOW *win, string header, const int win_width, const int row=1);
 menu_state main_menu(WINDOW *win);
@@ -25,7 +29,7 @@ menu_state diff_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");  // TODO: Constant
+    print_menu(win, highlight, choices, n_choices, win_y, win_x, title_diff);
 
     while (true) {
         // input and update
@@ -53,7 +57,7 @@ menu_state diff_menu(WINDOW *win)
             // no default actions to be taken
         }
         // display
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "May you live in interesting times.");  // TODO: Constant
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, title_diff);
         // update
         if (choice == 1) {
             return game_easy;
@@ -78,7 +82,7 @@ menu_state main_menu(WINDOW *win)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
+    print_menu(win, highlight, choices, n_choices, win_y, win_x, title_main);
 
     while (true) {
         c = wgetch(win);
@@ -104,7 +108,7 @@ menu_state main_menu(WINDOW *win)
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, title_main);
         if (choice == 1) {
             return menu_diff;
         } else if (choice == 2) {
@@ -126,7 +130,7 @@ menu_state cont_menu(WINDOW *win, GameData *data)
     int c, win_y, win_x;
 
     getmaxyx(stdscr, win_y, win_x);
-    print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");
+    print_menu(win, highlight, choices, n_choices, win_y, win_x, title_main);
 
     while (true) {
         c = wgetch(win);
@@ -152,7 +156,7 @@ menu_state cont_menu(WINDOW *win, GameData *data)
                 break;
             // no default actions to be taken
         }
-        print_menu(win, highlight, choices, n_choices, win_y, win_x, "The Halls of Erebor");  // TODO: Constant
+        print_menu(win, highlight, choices, n_choices, win_y, win_x, title_main);
         if (choice == 1) {
             data->maze.level = -1;
             return menu_diff;
@@ -238,4 +242,3 @@ static void print_menu(WINDOW *win, const int highlight, char const **choices, c
     refresh();
     wrefresh(win);
 }
-
