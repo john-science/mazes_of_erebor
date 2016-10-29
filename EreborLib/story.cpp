@@ -16,28 +16,35 @@ string gen_intro_text(PlayerData);
 static const char* splash_exclaim[] = {"", "Success! ", "Finally! ", "Whew! "};
 static const int n_splash_exclaim = sizeof(splash_exclaim) / sizeof(char *);
 static const char* splash_success[] = {"You did it!",
-                                        "You solved it!",
-                                        "You solved the maze!",
-                                        "You found a way out!",
-                                        "You are through the maze!",
-                                        "You found your way through the maze!",
-                                        "You are through!",
-                                        "You found the end of the laybrinth!"};
+                                       "You are through!",
+                                       "You found a way down!",
+                                       "You found a way out!",
+                                       "You found a way through!",
+                                       "You are through the catacombs!",
+                                       "You are through the labyrinth!",
+                                       "You are through the maze!",
+                                       "You found your way through the catacombs!",
+                                       "You found your way through the labyrinth!",
+                                       "You found your way through the maze!",
+                                       "You found the end of the catacombs!",
+                                       "You found the end of the labyrinth!",
+                                       "You found the end of the maze!"};
 static const int n_splash_success = sizeof(splash_success) / sizeof(char *);
-static const char* splash_story[] = {"You delve deeper.",
-                                      "You take a short rest before taking the staircase down.",
-                                      "At the end of the maze you find a staircase leading down.",
-                                      "You find a staircase leading down and follow it.",
-                                      "Deeper and deeper into the Halls of the Mountain King...",
-                                      "Your torch flickers in a draft as you head down the stairs.",
-                                      "You hear the echoes of war drums far off in the distance.",
-                                      "You find a curving ramp leading further down into the mountain.",
-                                      "You find a narrow staircase leading down into the mountain.",
-                                      "You kick over a dusty old pile of Orcish remains that block the staircase.",
-                                      "How deep under the mountain do these tunnels go?",
-                                      "Above the stone doorway you find an engraved scene of a human archer killing a dragon.",
-                                      "Engraved along the walls of the spiral staircase are "
-                                      "scenes of a dwarf being buried with a glowing gem."};
+static const char* splash_story[] = {"Engraved above the archway leading down further into the catacombs is a scene "
+                                     "of Durin the Deathless waking up, first of all Dwarves, in his cave under "
+                                     "Mount Dundabad",
+                                     "Engraved above the stone doorway you find an engraved scene of a "
+                                     "human archer killing a dragon.",
+                                     "Engraved in the living rock above the staircase is a long series of "
+                                     "scene of the great Dwarven smith Telchar crafting the Dragon-helm of Dor-lómin. "
+                                     "Each panel details with extreme care the steps in blacksmith and magic that "
+                                     "were used to craft the helm. Your knowledge of blacksmith and magic have "
+                                     "improved.",
+                                     "Engraved above the stairwell is an extremely detailed and polished "
+                                     "depiction of King Azaghâl stabbing Glaurung, the first dragon, even "
+                                     "as the Dragon kills him.",
+                                     "Engraved along the walls of the spiral staircase are "
+                                     "scenes of a King Thorin Oakenshield being buried with the Arkenstone."};
 static const int n_splash_story = sizeof(splash_story) / sizeof(char *);
 static const char* intro = ", and you can feel that the fourth "
                     "age of the world is drawing to a close. You hail from the the great "
@@ -88,8 +95,8 @@ string gen_intro_text(PlayerData p) {
 string build_success_text(const int count) {
     string txt(string(skewed_choice(splash_exclaim, n_splash_exclaim)) +
                string(skewed_choice(splash_success, n_splash_success)) + "\n\n" +
-               string(skewed_choice(splash_story, n_splash_story)) + "\n\n\n" +
-               string("You are now ") + to_string(count) + string(" levels under Erebor."));
+               string(skewed_choice(splash_story, n_splash_story, 1)) + "\n\n\n" +
+               string("You take the staircase down.\n\nYou are now ") + to_string(count) + string(" levels under Erebor."));
 
     return txt;
 }
