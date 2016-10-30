@@ -17,8 +17,6 @@ int main()
     keypad(win, TRUE);
     srand(time(0));
 
-    std::cout << "beep 1" << std::endl;
-
     // create a default game data object
     GameData data;
 
