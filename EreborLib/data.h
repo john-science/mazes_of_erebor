@@ -20,10 +20,11 @@ public:
     Maze maze;
     PlayerData player;
     menu_state difficulty;
-    int win_level;
 
     void restart_level();
     bool reached_end();
+private:
+    int win_level;
 };
 
 

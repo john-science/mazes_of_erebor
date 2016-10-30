@@ -88,7 +88,7 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
 
 
 /**
- * TODO: desc
+ * Displaying end game "win" text.
  */
 menu_state game_win_screen(WINDOW *win, const GameData *d) {
     win_splash(win);

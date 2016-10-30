@@ -26,7 +26,7 @@ void GameData::restart_level() {
 
 
 /**
- *  TODO: desc
+ *  helper function to determine if you have won the game.
  */
 bool GameData::reached_end() {
     if (maze.level == win_level) {

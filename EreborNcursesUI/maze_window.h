@@ -11,4 +11,3 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state);
 menu_state game_win_screen(WINDOW *win, const GameData *d);
 
 #endif
-
