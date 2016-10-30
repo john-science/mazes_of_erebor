@@ -17,8 +17,6 @@ int main()
     keypad(win, TRUE);
     srand(time(0));
 
-    std::cout << "beep 1" << std::endl;
-
     // create a default game data object
     GameData data;
 
@@ -35,6 +33,8 @@ int main()
             state = cont_menu(win, &data);
         } else if (state == game_easy || state == game_hard || state == game_medium){
             state = game_loop_maze(win, &data, state);
+        } else if (state == game_win) {
+            state = game_win_screen(win, &data);
         } else {
             state = quit;
         }

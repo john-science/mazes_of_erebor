@@ -8,6 +8,7 @@ void maze_print_easy(WINDOW*, const GameData);
 void maze_print_medium(WINDOW*, const GameData);
 void maze_print_hard(WINDOW*, const GameData);
 menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state);
+menu_state game_win_screen(WINDOW *win, const GameData *d);
 
 #endif
 

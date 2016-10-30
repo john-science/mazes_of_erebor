@@ -55,8 +55,12 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
             success_splash(win, level + 1);
         }
         if (needs_update) {
-            maze_print(win, *d);
-            needs_update = false;
+            if (d->reached_end()) {
+                return game_win;
+            } else {
+                maze_print(win, *d);
+                needs_update = false;
+            }
         }
 
         // INPUT
@@ -82,6 +86,15 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
     }
 }
 
+
+/**
+ * TODO: desc
+ */
+menu_state game_win_screen(WINDOW *win, const GameData *d) {
+    win_splash(win);
+    wgetch(win);
+    return quit;
+}
 
 
 // TODO: If the window is larger than the maze, we only need to redraw the player, not the maze.

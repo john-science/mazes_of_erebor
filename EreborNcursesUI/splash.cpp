@@ -25,6 +25,14 @@ void intro_splash(WINDOW *win, PlayerData p) {
 
 
 /**
+ *    Splash screen, for the end of the game
+ */
+void win_splash(WINDOW *win) {
+    content_screen(win, gen_win_text());
+}
+
+
+/**
  *    Splash screen, after you finish a maze
  */
 void success_splash(WINDOW *win, const int count) {

@@ -9,6 +9,7 @@
 // declarations
 std::string build_success_text(const int count);
 std::string gen_intro_text(PlayerData p);
+std::string gen_win_text();
 
 
 #endif

@@ -7,6 +7,7 @@ using namespace std;
 
 GameData::GameData() {
     difficulty = game_easy;
+    win_level = 100;
 }
 
 
@@ -21,4 +22,16 @@ void GameData::restart_level() {
     player.visited[maze.finish[0] * maze.ncols + maze.finish[1]] = true;
     player.loc[0] = maze.start[0];
     player.loc[1] = maze.start[1];
+}
+
+
+/**
+ *  TODO: desc
+ */
+bool GameData::reached_end() {
+    if (maze.level == win_level) {
+        return true;
+    } else {
+        return false;
+    }
 }

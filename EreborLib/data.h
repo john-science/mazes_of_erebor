@@ -8,13 +8,10 @@
 using namespace std;
 
 
-// TODO: Does this belong in data, or in menu?
+// menu state to be used by GUI
 enum menu_state {menu_main, menu_diff, menu_cont,
                  game_easy, game_medium, game_hard,
-                 too_small, quit};
-
-
-enum game_state {game_intro, game_play, game_leveled};
+                 game_win, quit};
 
 
 class GameData {
@@ -23,8 +20,10 @@ public:
     Maze maze;
     PlayerData player;
     menu_state difficulty;
+    int win_level;
 
     void restart_level();
+    bool reached_end();
 };
 
 

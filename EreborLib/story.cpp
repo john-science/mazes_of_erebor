@@ -9,7 +9,6 @@ using namespace std;
 // forward declarations
 const char* skewed_choice(const char* arr[], const int length, const int exp=3);
 string build_success_text(const int);
-string gen_intro_text(PlayerData);
 
 
 // constants for splash screen
@@ -77,7 +76,17 @@ static const char* intro = ", and you can feel that the fourth "
                     "You set off quietly months ago and started mining out the hidden entrance "
                     "your father left to the undermines. Sealing yourself in as you go. Today "
                     "you break through and enter the catacombs for the first and last time.";
+static const char* you_win = "This is placeholder text for the You Win screen. There should be "
+                    "a lot of stuff here about Erebor and the Arkenstone, etc.\n"
+                    "Blah, blah, blah. Etcetera.";
 
+
+/**
+ *  Mostly static game text, for a winning game state.
+ */
+string gen_win_text() {
+    return string(you_win);
+}
 
 /**
  *  Mostly static game intro.
