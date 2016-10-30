@@ -14,9 +14,6 @@ enum menu_state {menu_main, menu_diff, menu_cont,
                  too_small, quit};
 
 
-enum game_state {game_intro, game_play, game_leveled};
-
-
 class GameData {
 public:
     GameData();
