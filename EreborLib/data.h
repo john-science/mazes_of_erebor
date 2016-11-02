@@ -23,6 +23,7 @@ public:
 
     void restart_level();
     bool reached_end();
+    bool reached_final();
 private:
     int win_level;
 };

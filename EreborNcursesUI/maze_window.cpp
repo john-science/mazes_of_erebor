@@ -52,7 +52,9 @@ menu_state game_loop_maze(WINDOW *win, GameData *d, menu_state state) {
         // RENDER
         if (level != d->maze.level) {
             level = d->maze.level;
-            success_splash(win, level + 1);
+            if (!d->reached_end()) {
+                success_splash(win, level + 1);
+            }
         }
         if (needs_update) {
             if (d->reached_end()) {
@@ -97,7 +99,6 @@ menu_state game_win_screen(WINDOW *win, const GameData *d) {
 }
 
 
-// TODO: If the window is larger than the maze, we only need to redraw the player, not the maze.
 /**
  *   Print a maze, including player/finish positions.
  *   This prints from a God's Eye perspective,

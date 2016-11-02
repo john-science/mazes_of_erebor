@@ -211,3 +211,30 @@ void Maze::gen_new() {
     gen_entrances_opposites();
 }
 
+
+/**
+ *   Pull everything together and generate the final level.
+ *   (Not a maze.)
+ */
+void Maze::gen_final() {
+    // create maze of maximum size
+    ncols = MAX_MAZE_SIZE;
+    nrows = MAX_MAZE_SIZE / 2;
+    // fill maze grid will walls
+    delete[] grid;
+    grid = new bool[nrows * ncols];
+    fill_n(grid, nrows * ncols, true);
+    // halways going from left to right
+    int start_row(nrows / 2);
+    for (int i=0; i < ncols - 1; ++i) {
+        set(start_row - 1, i, false);
+        set(start_row, i, false);
+        set(start_row + 1, i, false);
+    }
+    set(start_row, ncols - 1, false);
+    // start and finish points at opposite ends of the hallway
+    start[0] = start_row;
+    start[1] = 0;
+    finish[0] = start_row;
+    finish[1] = ncols - 1;
+}

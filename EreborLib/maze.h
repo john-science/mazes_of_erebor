@@ -22,6 +22,7 @@ public:
     int* find_neighbor(const int row, const int col, int result[]) const;
     bool is_valid_move(const int, const int) const;
     void gen_new();
+    void gen_final();
 private:
     // attributes
     bool *grid;

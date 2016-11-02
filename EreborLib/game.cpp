@@ -10,7 +10,7 @@ using namespace std;
 
 // forward declarations
 void maze_loop_update(const int c, bool *needs_update, GameData *game);
-void maze_loop_init(GameData *game, const menu_state state);  // TODO: Remove menu state reference?
+void maze_loop_init(GameData *game, const menu_state state);
 
 
 /**
@@ -66,6 +66,10 @@ void maze_loop_update(const int c, bool *needs_update, GameData *game) {
             game->maze.gen_new();
             game->restart_level();
             game->maze.level += 1;
+            if (game->reached_final()) {
+                game->maze.gen_final();
+                game->restart_level();
+            }
         }
 
         game->player.visited[game->player.loc[0] * game->maze.ncols + game->player.loc[1]] = true;
